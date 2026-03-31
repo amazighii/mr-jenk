@@ -1,0 +1,54 @@
+package com.buy01.user.service;
+
+import com.buy01.user.dto.*;
+import com.buy01.user.model.User;
+import com.buy01.user.repository.UserRepository;
+import com.buy01.user.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
+    public AuthResponse register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already in use");
+        }
+
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setRole(request.getRole());
+
+        User saved = userRepository.save(user);
+
+        String token = jwtUtil.generateToken(
+            saved.getId(), saved.getEmail(), saved.getRole().name()
+        );
+
+        return new AuthResponse(token, saved.getRole().name(), saved.getId());
+    }
+
+    public AuthResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        String token = jwtUtil.generateToken(
+            user.getId(), user.getEmail(), user.getRole().name()
+        );
+
+        return new AuthResponse(token, user.getRole().name(), user.getId());
+    }
+}
