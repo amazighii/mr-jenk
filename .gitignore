@@ -1,0 +1,17 @@
+# Maven
+target/
+*.class
+*.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Angular
+node_modules/
+dist/
+
+# Environment
+.env
+*.env

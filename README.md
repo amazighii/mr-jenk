@@ -1,2 +1,2 @@
 # buy-01
-a microservices e-commerce application using spring boot and angular
+E-commerce microservices platform built with Spring Boot, Angular, Kafka, MongoDB, and MinIO.
