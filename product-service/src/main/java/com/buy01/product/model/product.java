@@ -17,6 +17,6 @@ public class product {
     private double price;
     private int quantity;
     // To check later with Media
-    // private String imageUrl; // set later via Media Service 
+    private String imageUrl; // set later via Media Service 
     private String userId; // reference to User ID of the seller
 }

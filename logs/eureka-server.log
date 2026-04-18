@@ -1,0 +1,122 @@
+[INFO] Scanning for projects...
+Downloading from central: https://repo.maven.apache.org/maven2/io/github/git-commit-id/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/flywaydb/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/cyclonedx/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/maven-metadata.xml
+Progress (1): 234 BProgress (2): 234 B | 243 BProgress (3): 234 B | 243 B | 249 B                                   Downloaded from central: https://repo.maven.apache.org/maven2/org/flywaydb/maven-metadata.xml (234 B at 724 B/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/cyclonedx/maven-metadata.xml (243 B at 752 B/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/maven-metadata.xml (249 B at 770 B/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/liquibase/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/jooq/maven-metadata.xml
+Progress (1): 255 B                   Downloaded from central: https://repo.maven.apache.org/maven2/io/github/git-commit-id/maven-metadata.xml (255 B at 782 B/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/graalvm/buildtools/maven-metadata.xml
+Progress (1): 375 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/maven-metadata.xml (375 B at 8.9 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+Progress (1): 398 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/jooq/maven-metadata.xml (398 B at 8.8 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+Progress (1): 394 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/liquibase/maven-metadata.xml (394 B at 8.0 kB/s)
+Progress (1): 242 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/graalvm/buildtools/maven-metadata.xml (242 B at 4.3 kB/s)
+Progress (1): 4.6 kBProgress (1): 9.7 kBProgress (1): 14 kB                    Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 325 kB/s)
+Progress (1): 3.1 kBProgress (1): 7.7 kBProgress (1): 12 kB Progress (1): 17 kBProgress (1): 20 kBProgress (1): 21 kB                   Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (21 kB at 215 kB/s)
+[INFO] 
+[INFO] ----------------------< com.buy01:eureka-server >-----------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.5.0:clean (default-clean) @ eureka-server ---
+[INFO] Deleting /home/iichi/specialité/Java/buy-01/eureka-server/target
+[INFO] 
+[INFO] >>> spring-boot:4.0.5:run (default-cli) > test-compile @ eureka-server >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ eureka-server ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ eureka-server ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/classes
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ eureka-server ---
+[INFO] skip non existing resourceDirectory /home/iichi/specialité/Java/buy-01/eureka-server/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ eureka-server ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] <<< spring-boot:4.0.5:run (default-cli) < test-compile @ eureka-server <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.5:run (default-cli) @ eureka-server ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-04-18T13:23:41.363+01:00  INFO 281406 --- [eureka-server] [  restartedMain] c.b.e.EurekaServerApplication            : Starting EurekaServerApplication using Java 25.0.2 with PID 281406 (/home/iichi/specialité/Java/buy-01/eureka-server/target/classes started by iichi in /home/iichi/specialité/Java/buy-01/eureka-server)
+2026-04-18T13:23:41.365+01:00  INFO 281406 --- [eureka-server] [  restartedMain] c.b.e.EurekaServerApplication            : No active profile set, falling back to 1 default profile: "default"
+2026-04-18T13:23:41.387+01:00  INFO 281406 --- [eureka-server] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-04-18T13:23:41.387+01:00  INFO 281406 --- [eureka-server] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-04-18T13:23:41.842+01:00  INFO 281406 --- [eureka-server] [  restartedMain] o.s.cloud.context.scope.GenericScope     : BeanFactory id=c020f6e5-b6f2-3c66-887c-93b21261963f
+2026-04-18T13:23:42.027+01:00  INFO 281406 --- [eureka-server] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8761 (http)
+2026-04-18T13:23:42.034+01:00  INFO 281406 --- [eureka-server] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-18T13:23:42.035+01:00  INFO 281406 --- [eureka-server] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-04-18T13:23:42.056+01:00  INFO 281406 --- [eureka-server] [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 669 ms
+2026-04-18T13:23:42.428+01:00  INFO 281406 --- [eureka-server] [  restartedMain] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2026-04-18T13:23:42.428+01:00  INFO 281406 --- [eureka-server] [  restartedMain] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.thoughtworks.xstream.converters.reflection.SunUnsafeReflectionProvider (file:/home/iichi/.m2/repository/com/thoughtworks/xstream/xstream/1.4.21/xstream-1.4.21.jar)
+WARNING: Please consider reporting this to the maintainers of class com.thoughtworks.xstream.converters.reflection.SunUnsafeReflectionProvider
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+2026-04-18T13:23:42.521+01:00  INFO 281406 --- [eureka-server] [  restartedMain] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2026-04-18T13:23:42.521+01:00  INFO 281406 --- [eureka-server] [  restartedMain] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2026-04-18T13:23:42.586+01:00  INFO 281406 --- [eureka-server] [  restartedMain] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-04-18T13:23:42.913+01:00  WARN 281406 --- [eureka-server] [  restartedMain] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-04-18T13:23:42.921+01:00  INFO 281406 --- [eureka-server] [  restartedMain] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-04-18T13:23:42.928+01:00  INFO 281406 --- [eureka-server] [  restartedMain] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-04-18T13:23:42.928+01:00  INFO 281406 --- [eureka-server] [  restartedMain] com.netflix.discovery.DiscoveryClient    : Client configured to neither register nor query for data.
+2026-04-18T13:23:42.929+01:00  INFO 281406 --- [eureka-server] [  restartedMain] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1776515022929 with initial instances count: 0
+2026-04-18T13:23:42.945+01:00  INFO 281406 --- [eureka-server] [  restartedMain] c.n.eureka.DefaultEurekaServerContext    : Initializing ...
+2026-04-18T13:23:42.945+01:00  WARN 281406 --- [eureka-server] [  restartedMain] c.n.eureka.cluster.PeerEurekaNodes       : The replica size seems to be empty. Check the route 53 DNS Registry
+2026-04-18T13:23:42.949+01:00  INFO 281406 --- [eureka-server] [  restartedMain] c.n.e.registry.AbstractInstanceRegistry  : Finished initializing remote region registries. All known remote regions: []
+2026-04-18T13:23:42.949+01:00  INFO 281406 --- [eureka-server] [  restartedMain] c.n.eureka.DefaultEurekaServerContext    : Initialized
+2026-04-18T13:23:42.953+01:00  INFO 281406 --- [eureka-server] [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-04-18T13:23:42.975+01:00  INFO 281406 --- [eureka-server] [  restartedMain] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application EUREKA-SERVER with eureka with status UP
+2026-04-18T13:23:42.980+01:00  INFO 281406 --- [eureka-server] [      Thread-13] o.s.c.n.e.server.EurekaServerBootstrap   : isAws returned false
+2026-04-18T13:23:42.980+01:00  INFO 281406 --- [eureka-server] [      Thread-13] o.s.c.n.e.server.EurekaServerBootstrap   : Initialized server context
+2026-04-18T13:23:42.980+01:00  INFO 281406 --- [eureka-server] [      Thread-13] c.n.e.r.PeerAwareInstanceRegistryImpl    : Got 1 instances from neighboring DS node
+2026-04-18T13:23:42.980+01:00  INFO 281406 --- [eureka-server] [      Thread-13] c.n.e.r.PeerAwareInstanceRegistryImpl    : Renew threshold is: 1
+2026-04-18T13:23:42.980+01:00  INFO 281406 --- [eureka-server] [      Thread-13] c.n.e.r.PeerAwareInstanceRegistryImpl    : Changing status to UP
+2026-04-18T13:23:42.981+01:00  INFO 281406 --- [eureka-server] [      Thread-13] e.s.EurekaServerInitializerConfiguration : Started Eureka Server
+2026-04-18T13:23:42.983+01:00  INFO 281406 --- [eureka-server] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8761 (http) with context path '/'
+2026-04-18T13:23:42.983+01:00  INFO 281406 --- [eureka-server] [  restartedMain] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8761
+2026-04-18T13:23:43.032+01:00  INFO 281406 --- [eureka-server] [  restartedMain] c.b.e.EurekaServerApplication            : Started EurekaServerApplication in 1.877 seconds (process running for 2.202)
+eureka server running on: http://localhost:8761
+2026-04-18T13:23:51.830+01:00  INFO 281406 --- [eureka-server] [nio-8761-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-18T13:23:51.831+01:00  INFO 281406 --- [eureka-server] [nio-8761-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-18T13:23:51.831+01:00  INFO 281406 --- [eureka-server] [nio-8761-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-04-18T13:23:51.941+01:00  INFO 281406 --- [eureka-server] [nio-8761-exec-2] c.n.e.registry.AbstractInstanceRegistry  : Registered instance API-GATEWAY/10.1.16.12:API-GATEWAY:8080 with status UP (replication=false)
+2026-04-18T13:23:57.742+01:00  INFO 281406 --- [eureka-server] [nio-8761-exec-5] c.n.e.registry.AbstractInstanceRegistry  : Registered instance USER-SERVICE/10.1.16.12:USER-SERVICE:8081 with status UP (replication=false)
+2026-04-18T13:24:03.162+01:00  INFO 281406 --- [eureka-server] [nio-8761-exec-8] c.n.e.registry.AbstractInstanceRegistry  : Registered instance PRODUCT-SERVICE/10.1.16.12:product-service:8082 with status UP (replication=false)
+2026-04-18T13:24:42.981+01:00  INFO 281406 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-04-18T13:25:02.095+01:00  INFO 281406 --- [eureka-server] [nio-8761-exec-2] c.n.e.registry.AbstractInstanceRegistry  : Registered instance PRODUCT-SERVICE/10.1.16.12:product-service:8082 with status DOWN (replication=false)
+2026-04-18T13:25:05.108+01:00  INFO 281406 --- [eureka-server] [nio-8761-exec-5] c.n.e.registry.AbstractInstanceRegistry  : Cancelled instance PRODUCT-SERVICE/10.1.16.12:product-service:8082 (replication=false)
+2026-04-18T13:25:05.700+01:00  INFO 281406 --- [eureka-server] [nio-8761-exec-8] c.n.e.registry.AbstractInstanceRegistry  : Registered instance PRODUCT-SERVICE/10.1.16.12:product-service:8082 with status UP (replication=false)
+2026-04-18T13:25:42.980+01:00  INFO 281406 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-04-18T13:26:42.980+01:00  INFO 281406 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-04-18T13:27:42.980+01:00  INFO 281406 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-04-18T13:28:42.980+01:00  INFO 281406 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-04-18T13:29:42.981+01:00  INFO 281406 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-04-18T13:30:42.980+01:00  INFO 281406 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-04-18T13:31:42.980+01:00  INFO 281406 --- [eureka-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
