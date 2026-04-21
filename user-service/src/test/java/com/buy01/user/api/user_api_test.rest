@@ -6,10 +6,11 @@
 
 POST http://localhost:8080/api/auth/register
 Content-Type: application/json
+# X-Internal-Request: true
 
 {
-"name": "John Doe",
-"email": "john.doe@example.com",
+"name": "ismail ichi",
+"email": "ismail.ichi@example.com",
 "firstName": "John",
 "lastName": "Doe",
 "avatarUrl": "http://example.com/avatar.png",
@@ -27,13 +28,13 @@ POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 
 {
-"name": "John Doe",
+"name": "john doe",
 "email": "john.doe@example.com",
-"firstName": "John",
-"lastName": "Doe",
+"firstName": "john",
+"lastName": "doe",
 "avatarUrl": "http://example.com/avatar.png",
 "password": "password123",
-"role": "CLIENT"
+"role": "SELLER"
 }
 
 
@@ -61,7 +62,7 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-"email": "john.doe@example.com",
+"email": "ismail.ismail@example.com",
 "password": "password123"
 }
 
@@ -100,7 +101,8 @@ Content-Type: application/json
 
 
 GET http://localhost:8080/api/users/me
-Authorization: Bearer YOUR_TOKEN_HERE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU2MTFkYmFiNjE0MGZiMWI5ZGRkNWYiLCJlbWFpbCI6ImlzbWFpbC5pc21haWxAZXhhbXBsZS5jb20iLCJyb2xlIjoiQ0xJRU5UIiwiaWF0IjoxNzc2Nzg2MDM3LCJleHAiOjE3NzY4NzI0Mzd9.V-pwudnjtsaLFIQJnwLTY3lfaCQ1_OGR4ArgW3v0gZQ
+
 
 
 
@@ -111,13 +113,11 @@ Authorization: Bearer YOUR_TOKEN_HERE
 GET http://localhost:8080/api/users/me
 
 
-
 ### GET PROFILE - INVALID TOKEN
 
-
-
 GET http://localhost:8080/api/users/me
-Authorization: Bearer invalid.token.here
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eXyJzdWIiOiI2OWUzNzg5ZjMwZmU2MWE0NTVhM2MzOWQiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6IkNMSUVOVCIsImlhdCI6MTc3NjY4MTkyNiwiZXhwIjoxNzc2NzY4MzI2fQ.0wohd-M-k1fuCGiSfOn04ssgCcDhhAJ0B4G1e4omai8
+
 
 
 
@@ -153,7 +153,7 @@ Content-Type: application/json
 
 ### WRONG PATH (SHOULD FAIL)
 
-GET http://localhost:8080/api/user/me
+GET http://localhost:8080/api/users/me
 
 
 ### WRONG METHOD (SHOULD FAIL)
@@ -179,3 +179,50 @@ Content-Type: application/json
 "email": "john.doe@example.com",
 "password": "password123"
 }
+
+### =========================
+
+### CORS PREFLIGHT TEST
+
+### =========================
+
+POST http://localhost:8080/api/auth/login
+Origin: http://localhost:4200
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: content-type, authorization
+Content-Type: application/json
+
+{
+"email": "ismail.ismail@example.com",
+"password": "password123"
+}
+
+
+### ==================================================================================
+
+### DIRECT ACCESS TEST (BYPASS GATEWAY)
+
+### =========================
+
+GET http://localhost:8081/api/users/me
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### =========================
+
+### DIRECT ACCESS - NO TOKEN
+
+### =========================
+
+GET http://localhost:8081/api/users/me
+
+### =========================
+
+### DIRECT ACCESS - FAKE INTERNAL HEADER
+
+### =========================
+
+GET http://localhost:8081/api/users/me
+Authorization: Bearer YOUR_TOKEN_HERE
+X-Internal-Request: true
+
+### ==================================================================================

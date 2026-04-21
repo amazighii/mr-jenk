@@ -10,8 +10,15 @@ echo "-----------------------------------"
 
 echo "Stopping MongoDB container..."
 
-chmod +x db-stop.sh
-./db-stop.sh
+# Stop MongoDB container
+
+chmod +x ./scripts/db/db-stop.sh
+./scripts/db/db-stop.sh
+
+# Stop Kafka and Zookeeper
+chmod +x ./scripts/kafka/kafka_stop.sh
+./scripts/kafka/kafka_stop.sh
+
 
 sleep 2
 echo "docker stop command executed."

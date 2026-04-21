@@ -5,10 +5,16 @@ echo "Starting microservices..."
 # running MongoDB container
 echo "Starting databases..."
 
-chmod +x db-start.sh
+chmod +x ./scripts/db/db-start.sh
+chmod +x ./scripts/kafka/kafka_init.sh
 
-./db-start.sh
+# Start databases
+./scripts/db/db-start.sh
+sleep 5
 
+# Start Kafka and Zookeeper
+
+./scripts/kafka/kafka_init.sh
 sleep 5
 
 
@@ -41,7 +47,7 @@ cd - > /dev/null
 # 1. Start Eureka Server first
 
 run_service "eureka-server" "eureka-server"
-sleep 10
+sleep 5
 
 # 2. Start Gateway
 

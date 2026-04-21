@@ -1,5 +1,9 @@
 package com.buy01.product.model;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,14 +13,16 @@ import lombok.NoArgsConstructor;
 @Data
 @Document(collection = "products")
 @NoArgsConstructor
-public class product {
+public class Product {
     @Id
     private String id;
     private String name;
     private String description;
-    private double price;
+    private BigDecimal price;
     private int quantity;
     // To check later with Media
-    private String imageUrl; // set later via Media Service 
-    private String userId; // reference to User ID of the seller
+    private List<String> imageUrls; // set later via Media Service 
+    private String sellerId; // reference to User ID of the seller
+    private Instant createdAt;
+    private Instant updatedAt;
 }

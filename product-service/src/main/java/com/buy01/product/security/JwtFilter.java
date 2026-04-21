@@ -1,4 +1,4 @@
-package com.buy01.user.security;
+package com.buy01.product.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -30,10 +30,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-
-            if (jwtUtil.isTokenValid(token)) {
-                String userId = jwtUtil.extractUserId(token);
-                String role = jwtUtil.extractRole(token);
+            System.out.println("\nReceived token in product service: " + token + "\n");
+            if (jwtUtils.isTokenValid(token)) {
+                String userId = jwtUtils.extractUserId(token);
+                String role = jwtUtils.extractRole(token);
 
                 var auth = new UsernamePasswordAuthenticationToken(
                         userId,
@@ -42,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
-            System.out.println("\nInvalid token in user service: " + token + "\n");
+            System.out.println("\nInvalid token in product service: " + token + "\n");
 
         }
 
