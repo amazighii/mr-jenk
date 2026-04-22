@@ -1,10 +1,54 @@
+#-----
+
+
+### Get all/api products — public, no token needed
+GET http://localhost:8080/api/products
+
+### Get single product by ID — replace {id} with a real one
+GET http://localhost:8080/api/products/{id}
+
+
+### Create product — valid seller
 POST http://localhost:8080/api/products
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU2MTFkYmFiNjE0MGZiMWI5ZGRkNWYiLCJlbWFpbCI6ImlzbWFpbC5pc21haWxAZXhhbXBsZS5jb20iLCJyb2xlIjoiQ0xJRU5UIiwiaWF0IjoxNzc2Nzg2MDM3LCJleHAiOjE3NzY4NzI0Mzd9.V-pwudnjtsaLFIQJnwLTY3lfaCQ1_OGR4ArgW3v0gZQ
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1OTY4MiwiZXhwIjoxNzc2OTQ2MDgyfQ.uMMdu3rrA0RRGMBtgVAezuOz8iHcP9pjV9QFH8NNX-M
+
+{
+    "name": "Test Product",
+    "description": "This is a test product.",
+    "price": 200,
+    "quantity": 5000
+}
+
+### Create product — missing required fields (expect 400)
+POST http://localhost:8080/api/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1OTY4MiwiZXhwIjoxNzc2OTQ2MDgyfQ.uMMdu3rrA0RRGMBtgVAezuOz8iHcP9pjV9QFH8NNX-M
+
+{
+    "description": "Missing name and price."
+}
+
+### Create product — price is zero (expect 400)
+POST http://localhost:8080/api/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+
+{
+    "name": "Free Product",
+    "description": "Price should be greater than 0.",
+    "price": 0.01,
+    "quantity": 10
+}
+
+### Create product — no token (expect 401)
+POST http://localhost:8080/api/products
 Content-Type: application/json
 
 {
-    "name": "Test Product 1",
-    "description": "This is a test product.",
-    "price": 19.99,
-    "quantity": 100
+    "name": "Unauthorized Product",
+    "description": "No token provided.",
+    "price": 100,
+    "quantity": 10
 }
+

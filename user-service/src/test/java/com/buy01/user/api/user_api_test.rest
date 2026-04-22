@@ -11,11 +11,11 @@ Content-Type: application/json
 {
 "name": "ismail ichi",
 "email": "ismail.ichi@example.com",
-"firstName": "John",
-"lastName": "Doe",
+"firstName": "ismail",
+"lastName": "iichi",
 "avatarUrl": "http://example.com/avatar.png",
 "password": "password123",
-"role": "CLIENT"
+"role": "SELLER"
 }
 
 
@@ -62,7 +62,7 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-"email": "ismail.ismail@example.com",
+"email": "ismail.ichi@example.com",
 "password": "password123"
 }
 

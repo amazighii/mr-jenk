@@ -19,19 +19,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                // Public — anyone can browse products
-                .requestMatchers(HttpMethod.GET, "/products", "/products/**").permitAll()
-                .requestMatchers("/actuator/health").permitAll()
-                // Sellers only for writes
-                .requestMatchers(HttpMethod.POST, "/products/**").hasRole("SELLER")
-                .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("SELLER")
-                .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("SELLER")
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        // Public — anyone can browse products
+                        .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
+                        // Sellers only for writes
+                        .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("SELLER")
+                        .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("SELLER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("SELLER")
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

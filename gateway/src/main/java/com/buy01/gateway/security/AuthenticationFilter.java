@@ -33,6 +33,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     private static final List<String> PUBLIC_PATHS = List.of(
             "/api/auth/register",
             "/api/auth/login",
+            "/api/products", // Allow GET /api/products without auth
             "/actuator/health");
 
     @Override

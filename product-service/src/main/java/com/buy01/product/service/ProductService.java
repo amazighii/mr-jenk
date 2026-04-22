@@ -45,7 +45,7 @@ public class ProductService {
         Product saved = productRepository.save(product);
 
         kafkaTemplate.send(KafkaProducerConfig.PRODUCT_TOPIC,
-                new ProductEvent(EventType.PRODUCT_CREATED, saved.getId(), sellerId, saved.getName()));
+                new ProductEvent("PRODUCT_CREATED", saved.getId(), sellerId, saved.getName()));
 
         return toResponse(saved);
     }
@@ -58,7 +58,7 @@ public class ProductService {
         Product saved = productRepository.save(product);
 
         kafkaTemplate.send(KafkaProducerConfig.PRODUCT_TOPIC,
-                new ProductEvent(EventType.PRODUCT_UPDATED, saved.getId(), sellerId, saved.getName()));
+                new ProductEvent("PRODUCT_UPDATED", saved.getId(), sellerId, saved.getName()));
 
         return toResponse(saved);
     }
@@ -70,7 +70,7 @@ public class ProductService {
         productRepository.delete(product);
 
         kafkaTemplate.send(KafkaProducerConfig.PRODUCT_TOPIC,
-                new ProductEvent(EventType.PRODUCT_DELETED, id, sellerId, product.getName()));
+                new ProductEvent("PRODUCT_DELETED", id, sellerId, product.getName()));
     }
 
     // ── Helpers ─────────────────────────────────────────────

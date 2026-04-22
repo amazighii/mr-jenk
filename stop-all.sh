@@ -4,7 +4,7 @@ echo "Stopping all services..."
 
 pkill -f spring-boot:run
 
-sleep 3
+sleep 1
 
 echo "-----------------------------------"
 
@@ -20,7 +20,7 @@ chmod +x ./scripts/kafka/kafka_stop.sh
 ./scripts/kafka/kafka_stop.sh
 
 
-sleep 2
+sleep 1
 echo "docker stop command executed."
 echo "-----------------------------------"
 

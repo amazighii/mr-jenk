@@ -1,0 +1,80 @@
+
+# ------
+
+### Update product — valid seller owns the product
+# PUT http://localhost:8080/api/products/{id}
+PUT http://localhost:8080/api/products/{id}
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+
+{
+    "name": "Updated Product Name",
+    "description": "Updated description.",
+    "price": 350,
+    "quantity": 200
+}
+
+### Update product — change price only
+# PUT http://localhost:8080/api/products/{id}
+PUT http://localhost:8080/api/products/{id}
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+
+{
+    "name": "Same Product Name",
+    "description": "Same description.",
+    "price": 999,
+    "quantity": 200
+}
+
+### Update product — invalid price (expect 400)
+# PUT http://localhost:8080/api/products/{id}
+PUT http://localhost:8080/api/products/{id}
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+
+{
+    "name": "Bad Price Product",
+    "description": "Price is negative.",
+    "price": -50,
+    "quantity": 10
+}
+
+### Update product — wrong seller token (expect 404 — ownership check)
+# PUT http://localhost:8080/api/products/{id}
+PUT http://localhost:8080/api/products/{id}
+Content-Type: application/json
+Authorization: Bearer ANOTHER_SELLER_TOKEN_HERE
+
+{
+    "name": "Hacked Product",
+    "description": "Should not be allowed.",
+    "price": 1,
+    "quantity": 1
+}
+
+### Update product — no token (expect 401)
+PUT http://localhost:8080/api/products/{id}
+Content-Type: application/json
+
+{
+    "name": "No Auth Product",
+    "description": "No token provided.",
+    "price": 100,
+    "quantity": 10
+}
+
+
+
+
+### Update product — product does not exist (expect 404)
+PUT http://localhost:8080/api/products/000000000000000000000000
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+
+{
+    "name": "Ghost Product",
+    "description": "This ID does not exist.",
+    "price": 100,
+    "quantity": 5
+}
