@@ -27,5 +27,6 @@ public class ProductRequest {
     private Integer quantity;
 
     // Optional — seller links images after uploading to Media Service
+    @NotNull
     private List<String> imageUrls;
 }

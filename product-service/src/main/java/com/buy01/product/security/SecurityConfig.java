@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Public — anyone can browse products
-                        .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         // Sellers only for writes
                         .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("SELLER")

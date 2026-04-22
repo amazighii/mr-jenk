@@ -153,7 +153,7 @@ Content-Type: application/json
 
 ### WRONG PATH (SHOULD FAIL)
 
-GET http://localhost:8080/api/users/me
+GET http://localhost:8080/api/user/me
 
 
 ### WRONG METHOD (SHOULD FAIL)
@@ -193,7 +193,7 @@ Access-Control-Request-Headers: content-type, authorization
 Content-Type: application/json
 
 {
-"email": "ismail.ismail@example.com",
+"email": "ismail.ichi@example.com",
 "password": "password123"
 }
 

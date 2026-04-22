@@ -1,0 +1,12 @@
+<div>
+    <h1>Products</h1>
+    <ul>
+        @for (product of products) {
+        <li>
+            {{ product.name }} - ${{ product.price }}
+        </li>
+        } @empty {
+        <h3>No products available.</h3>
+        }
+    </ul>
+</div>

@@ -22,10 +22,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors()
-                .forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        // Map<String, String> errors = new HashMap<>();
+        // ex.getBindingResult().getFieldErrors()
+        // .forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "missing fields or invalid data"));
     }
 
     @ExceptionHandler(Exception.class)
