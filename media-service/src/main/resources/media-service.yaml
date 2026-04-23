@@ -1,0 +1,135 @@
+openapi: 3.0.0
+info:
+  title: Media-Service API
+  description: |
+    This is the Media-Service API that handles image upload, retrieval, and deletion.
+
+    All protected endpoints may return:
+    - 401 if no token or token is expired
+    - 403 if the role is insufficient or seller does not own the media
+  version: "1.0"
+
+servers:
+  - url: http://localhost:8080
+    description: api gateway url
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    MediaResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: MongoDB ObjectId of the media document
+        url:
+          type: string
+          description: Public URL to access the image
+        fileName:
+          type: string
+        contentType:
+          type: string
+        addedAt:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+paths:
+  /api/media/images:
+    post:
+      security:
+        - bearerAuth: []
+      summary: Upload an image
+      description: |
+        Uploads an image file to MinIO object storage. SELLER role required.
+        Validates MIME type (image/* only) and file size (max 2MB).
+        Returns the image URL to be used when creating or updating a product.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Image file to upload. Must be image/* and under 2MB.
+      responses:
+        "201":
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaResponse"
+              example:
+                id: "507f1f77bcf86cd799439011"
+                url: "http://localhost:8080/api/media/images/507f1f77bcf86cd799439011"
+                fileName: "product-front.jpg"
+                contentType: "image/jpeg"
+                addedAt: "2026-03-25T10:00:00Z"
+        "400":
+          description: Invalid file — wrong MIME type or file exceeds 2MB
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                wrongType:
+                  value:
+                    message: "Invalid file type. Only image/* is allowed."
+                tooLarge:
+                  value:
+                    message: "File size exceeds the 2MB limit."
+
+    delete:
+      security:
+        - bearerAuth: []
+      summary: Delete an image by ID
+      description: |
+        Deletes the image file from MinIO and its metadata from MongoDB.
+        SELLER role required. Seller must own the media (sellerId == JWT subject).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: MongoDB ObjectId of the media document
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Image deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: "Image deleted successfully."
+        "403":
+          description: Seller does not own this media
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: "You do not have permission to delete this image."
+        "404":
+          description: Image not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: "Image not found."

@@ -12,12 +12,13 @@ echo "Stopping MongoDB container..."
 
 # Stop MongoDB container
 
-chmod +x ./scripts/db/db-stop.sh
-./scripts/db/db-stop.sh
+docker compose stop
+# chmod +x ./scripts/db/db-stop.sh
+# ./scripts/db/db-stop.sh
 
 # Stop Kafka and Zookeeper
-chmod +x ./scripts/kafka/kafka_stop.sh
-./scripts/kafka/kafka_stop.sh
+# chmod +x ./scripts/kafka/kafka_stop.sh
+# ./scripts/kafka/kafka_stop.sh
 
 
 sleep 1

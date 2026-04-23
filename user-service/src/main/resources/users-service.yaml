@@ -1,0 +1,216 @@
+openapi: 3.0.0
+info:
+  title: Users-Service API
+  description: |
+    This is a Users-Service API that handles register and login features.
+
+    All protected endpoints may return:
+    - 401 if no token or token is expired
+    - 403 if the role is insufficient
+  version: "1.0"
+
+servers:
+  - url: http://localhost:8080
+    description: api gateway url
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /api/auth/register:
+    post:
+      summary: create a user in the database.
+      description: create a user in db after validating user input.
+      requestBody:
+        description: user credentials for register.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - role
+                - password
+              properties:
+                username:
+                  type: string
+                  description: unique username for the user.
+                email:
+                  type: string
+                  description: unique email for the user.
+                role:
+                  type: string
+                  enum:
+                    - CLIENT
+                    - SELLER
+                password:
+                  type: string
+                  description: password must be at least 8 characters long, 1 uppercase, 1
+                    lowercase, 1 special character, and 1 number.
+      responses:
+        "201":
+          description: user created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: User created successfully
+        "409":
+          description: conflict, username or email already exists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Username or Email already exists
+        "400":
+          description: Bad request, user didn't respect input requirements.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Password should contain at least an uppercase character.
+
+  /api/auth/login:
+    post:
+      summary: login to the app.
+      description: send user credentials to get checked, if valid return jwt token, if
+        not throw a correspond error.
+      requestBody:
+        description: user credentials for login.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+
+      responses:
+        "200":
+          description: user authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  role:
+                    type: string
+                    enum:
+                      - SELLER
+                      - CLIENT
+                example:
+                  message: Login successful
+                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaXNBZG1pbiI6ZmFsc2V9.EypViEDiJhjeuXgjtGdibxrFPFZyYKn-KqFeAw3c2No
+                  role: SELLER
+
+        "401":
+          description: user unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Password or Email invalid
+
+  /api/me:
+    get:
+      security:
+        - bearerAuth: []
+      summary: get user's username
+      description: get user's info, for now it's username only.
+
+      responses:
+        "200":
+          description: we got user's username successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  role:
+                    type: string
+                    enum: [ CLIENT, SELLER ]
+                  avatar_url:
+                    type: string
+                example:
+                  username: amazighi
+                  email: amazighi@gmail.com
+                  role: CLIENT
+                  avatar_url: https://host:port/avatar_url
+    put:
+      security:
+        - bearerAuth: []
+      summary: update pfp
+      description: update seller's profile picture.
+      requestBody:
+        description: avatar url.
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - avatarUrl
+              type: object
+              properties:
+                avatarUrl:
+                  type: string
+            example:
+              avatarUrl: https://host:port/avatar_url
+      responses:
+        "200":
+          description: avatar has been updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Avatar has been updated successfully.
+        "400":
+          description: invalid or missing url
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Invalid or missing url
