@@ -18,6 +18,7 @@ public class IsAuthorized extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws IOException, ServletException {
+
         String userId = request.getHeader("X-User-Id");
         String userRole = request.getHeader("X-User-Role");
 

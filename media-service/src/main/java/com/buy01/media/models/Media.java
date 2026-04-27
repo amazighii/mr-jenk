@@ -4,31 +4,49 @@ import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.mongodb.lang.NonNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Document(collection = "media")
 @Data
+@NoArgsConstructor
 public class Media {
 
     @Id
     private String id;
+
     @NonNull
     private String url;
+
     @NonNull
-    private String bucket_name; // the MinIO bucket where the file lives
+    @Field("bucket_name")
+    private String bucketName; // the MinIO bucket where the file lives
+
     @NonNull
-    private String object_name; // the unique filename/path inside the bucket
+    @Field("object_name")
+    private String objectName; // the unique filename/path inside the bucket
+
     @NonNull
-    private String content_type;
+    @Field("content_type")
+    private String contentType;
+
     @NonNull
-    private String file_name;
+    @Field("file_name")
+    private String fileName;
+
     @NonNull
-    private String product_id;
+    @Field("product_id")
+    private String productId;
+
     @NonNull
-    private String seller_id;
+    @Field("seller_id")
+    private String sellerId;
+
     @NonNull
-    private Date created_at;
+    @Field("added_at")
+    private Date addedAt;
 }

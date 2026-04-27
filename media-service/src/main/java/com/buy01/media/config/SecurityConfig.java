@@ -26,4 +26,5 @@ public class SecurityConfig {
                 ).addFilterBefore(isAuthorized, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 }

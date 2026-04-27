@@ -3,15 +3,15 @@
 echo "Starting microservices..."
 
 # running MongoDB container
-echo "Starting databases..."
+# echo "Starting databases..."
 
 # chmod +x ./scripts/db/db-start.sh
-chmod +x ./scripts/kafka/kafka_init.sh
+# chmod +x ./scripts/kafka/kafka_init.sh
 
 # Start databases
-docker compose up -d
+# docker compose up -d
 # ./scripts/db/db-start.sh
-sleep 5
+# sleep 5
 
 # Start Kafka and Zookeeper
 
