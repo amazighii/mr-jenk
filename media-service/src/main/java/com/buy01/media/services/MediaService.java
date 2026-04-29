@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.buy01.media.dto.DeleteMediaResponse;
 import com.buy01.media.dto.ResponseAddMediaEntity;
 import com.buy01.media.dto.ResponseAddMediaEntityWrapper;
+import com.buy01.media.dto.UpdateMediaResponse;
 import com.buy01.media.exception.EmptyMediaFileException;
 import com.buy01.media.exception.ForbiddenAction;
 import com.buy01.media.exception.InvalidMediaTypeException;
@@ -37,12 +38,7 @@ public class MediaService {
 
     public ResponseAddMediaEntityWrapper addMediaEntity(MultipartFile[] files, String sellerId) {
         ResponseAddMediaEntityWrapper responseAddMediaEntityWrapper = new ResponseAddMediaEntityWrapper();
-        ArrayList<ResponseAddMediaEntity> response = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            ResponseAddMediaEntity responseAddMediaEntity = validateMedia(file, sellerId);
-            response.add(responseAddMediaEntity);
-        }
+        ArrayList<ResponseAddMediaEntity> response = this.iterateOverFiles(files, sellerId, null);
 
         responseAddMediaEntityWrapper.setResponse(response);
 
@@ -50,7 +46,19 @@ public class MediaService {
 
     }
 
-    private ResponseAddMediaEntity validateMedia(MultipartFile file, String sellerId) {
+    private ArrayList<ResponseAddMediaEntity> iterateOverFiles(MultipartFile[] files, String sellerId, String productId) {
+        ArrayList<ResponseAddMediaEntity> response = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            ResponseAddMediaEntity responseAddMediaEntity = validateMedia(file, sellerId, productId);
+            response.add(responseAddMediaEntity);
+        }
+
+        return response;
+
+    }
+
+    private ResponseAddMediaEntity validateMedia(MultipartFile file, String sellerId, String productId) {
         if (file == null || file.isEmpty()) {
             throw new EmptyMediaFileException("File is required and cannot be empty.");
         }
@@ -90,6 +98,7 @@ public class MediaService {
         media.setFileName(file.getOriginalFilename());
         media.setSellerId(sellerId);
         media.setAddedAt(new Date());
+        media.setProductId(productId);
         try {
             mediaRepository.save(media);
         } catch (RuntimeException ex) {
@@ -107,7 +116,6 @@ public class MediaService {
     }
 
     public DeleteMediaResponse deleteSingleMedia(String mediaId, String sellerId) {
-        System.out.println("mediaId: " + mediaId + "  sellerId: " + sellerId);
 
         Media media = mediaRepository.findById(mediaId)
                 .orElseThrow(() -> new MediaNotFound());
@@ -128,5 +136,36 @@ public class MediaService {
         }
 
         return new DeleteMediaResponse("Media deleted successfully");
+    }
+
+    public UpdateMediaResponse updateMedia(
+            MultipartFile[] newFiles, String[] oldUrls, String sellerId, String productId) {
+        ArrayList<ResponseAddMediaEntity> response = this.iterateOverFiles(newFiles, sellerId, productId);
+
+        for (String url : oldUrls) {
+            deleteSingleMediaByUrl(url, sellerId);
+        }
+
+        return new UpdateMediaResponse("Media updated successfully", new ResponseAddMediaEntityWrapper(response));
+    }
+
+    private void deleteSingleMediaByUrl(String url, String sellerId) {
+        Media media = mediaRepository.findByUrl(url)
+                .orElseThrow(() -> new MediaNotFound());
+
+        if (!media.getSellerId().equals(sellerId)) {
+            throw new ForbiddenAction("Forbidden: can not perform this aciton");
+        }
+        mediaRepository.deleteByUrl(url);
+
+        try {
+            String objectName = media.getUrl().substring(media.getUrl().lastIndexOf("/") + 1);
+
+            minioService.deleteFile(objectName);
+
+        } catch (MinioException e) {
+            throw new MediaPersistenceException("Faild to delete this media", e);
+        }
+
     }
 }

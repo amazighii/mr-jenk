@@ -16,6 +16,12 @@ import com.buy01.media.services.MediaService;
 
 import jakarta.websocket.server.PathParam;
 
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
+
+import com.buy01.media.dto.UpdateMediaResponse;
+
 @RestController
 @RequestMapping("/api/media/images")
 public class MediaController {
@@ -35,12 +41,26 @@ public class MediaController {
         return ResponseEntity.status(201).body(response);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateMediaResponse> updateMedia(
+            @PathVariable("id") String productId,
+            @RequestPart("newFiles") MultipartFile[] newFiles,
+            @RequestPart("oldUrls") String[] oldUrls,
+            @RequestHeader("X-User-Id") String sellerId
+
+    ) {
+
+        UpdateMediaResponse response = mediaService.updateMedia(newFiles, oldUrls, sellerId, productId);
+
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteMediaResponse> deleteSingleMedia(
             @PathVariable("id") String mediaId,
             @RequestHeader("X-User-Id") String sellerId
     ) {
-        DeleteMediaResponse response =  mediaService.deleteSingleMedia(mediaId, sellerId);
+        DeleteMediaResponse response = mediaService.deleteSingleMedia(mediaId, sellerId);
 
         return ResponseEntity.ok(response);
     }

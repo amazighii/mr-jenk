@@ -14,4 +14,6 @@ public interface MediaRepository extends MongoRepository<Media, String> {
     Optional<ArrayList<Media>> findAllByProductId(String productId);
 
     Optional<Media> findByUrl(String url);
+
+    // Optional<Media> findByUrlAndSellerId(String url, String sellerId);
 }
