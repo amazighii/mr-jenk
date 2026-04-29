@@ -22,7 +22,6 @@ public class ProductService {
     private final KafkaTemplate<String, ProductEvent> kafkaTemplate;
 
     // ── Public ──────────────────────────────────────────────
-
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAll()
                 .stream().map(this::toResponse)
@@ -36,7 +35,6 @@ public class ProductService {
     }
 
     // ── Seller only ─────────────────────────────────────────
-
     public ProductResponse createProduct(ProductRequest request, String sellerId) {
         Product product = new Product();
         product.setSellerId(sellerId);
@@ -45,7 +43,12 @@ public class ProductService {
         Product saved = productRepository.save(product);
 
         kafkaTemplate.send(KafkaProducerConfig.PRODUCT_TOPIC,
-                new ProductEvent(EventType.PRODUCT_CREATED, saved.getId(), sellerId, saved.getName()));
+                new ProductEvent(
+                        EventType.PRODUCT_CREATED,
+                        saved.getId(),
+                        sellerId, saved.getName(),
+                        product.getImageUrls()
+                ));
 
         return toResponse(saved);
     }
@@ -57,8 +60,15 @@ public class ProductService {
         applyRequest(product, request);
         Product saved = productRepository.save(product);
 
+        // send request without imageUrls;
         kafkaTemplate.send(KafkaProducerConfig.PRODUCT_TOPIC,
-                new ProductEvent(EventType.PRODUCT_UPDATED, saved.getId(), sellerId, saved.getName()));
+                new ProductEvent(
+                        EventType.PRODUCT_UPDATED,
+                        saved.getId(),
+                        sellerId,
+                        saved.getName(),
+                        product.getImageUrls()
+                ));
 
         return toResponse(saved);
     }
@@ -70,11 +80,16 @@ public class ProductService {
         productRepository.delete(product);
 
         kafkaTemplate.send(KafkaProducerConfig.PRODUCT_TOPIC,
-                new ProductEvent(EventType.PRODUCT_DELETED, id, sellerId, product.getName()));
+                new ProductEvent(
+                        EventType.PRODUCT_DELETED,
+                        id,
+                        sellerId,
+                        product.getName(),
+                        product.getImageUrls()
+                ));
     }
 
     // ── Helpers ─────────────────────────────────────────────
-
     private void applyRequest(Product product, ProductRequest request) {
         product.setName(request.getName());
         product.setDescription(request.getDescription());

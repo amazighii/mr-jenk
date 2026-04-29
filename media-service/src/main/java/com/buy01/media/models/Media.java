@@ -38,7 +38,6 @@ public class Media {
     @Field("file_name")
     private String fileName;
 
-    @NonNull
     @Field("product_id")
     private String productId;
 

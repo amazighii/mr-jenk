@@ -10,6 +10,17 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    
+    @ExceptionHandler(ForbiddenAction.class)
+    public ResponseEntity<Map<String, String>> handleForbiddenAction(ForbiddenAction ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", ex.getMessage()));
+    }
+
+
+    @ExceptionHandler(MediaNotFound.class)
+    public ResponseEntity<Map<String, String>> handleMediaNotFound(MediaNotFound ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Media Not found"));
+    }
 
     @ExceptionHandler(InvalidMediaTypeException.class)
     public ResponseEntity<Map<String, String>> handleInvalidMediaType(InvalidMediaTypeException ex) {

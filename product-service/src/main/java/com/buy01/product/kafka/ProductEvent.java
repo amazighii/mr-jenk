@@ -1,8 +1,9 @@
 package com.buy01.product.kafka;
 
-import com.buy01.product.model.EventType;
+import java.util.ArrayList;
+import java.util.List;
 
-// import com.buy01.product.model.EventType;
+import com.buy01.product.model.EventType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +20,5 @@ public class ProductEvent {
     private String productId;
     private String sellerId;
     private String productName;
+    private List<String> imageUrls = new ArrayList<>(); 
 }

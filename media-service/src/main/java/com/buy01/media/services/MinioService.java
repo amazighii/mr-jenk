@@ -11,6 +11,7 @@ import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import io.minio.errors.MinioException;
 
 @Service
 public class MinioService {
@@ -53,11 +54,12 @@ public class MinioService {
         return minioUrl + "/" + bucket + "/" + objectName;
     }
 
-    public void deleteFile(String objectName) throws Exception {
+    public void deleteFile(String objectName) throws MinioException {
         minioClient.removeObject(
                 RemoveObjectArgs
                         .builder()
                         .object(objectName)
+                        .bucket(bucket)
                         .build()
         );
     }
