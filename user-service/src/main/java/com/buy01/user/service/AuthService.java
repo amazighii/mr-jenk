@@ -1,6 +1,8 @@
 package com.buy01.user.service;
 
 import com.buy01.user.dto.*;
+import com.buy01.user.exception.EmailAlreadyInUseException;
+import com.buy01.user.exception.InvalidCredentialsException;
 import com.buy01.user.model.User;
 import com.buy01.user.repository.UserRepository;
 import com.buy01.user.security.JwtUtil;
@@ -38,7 +40,7 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already in use");
+            throw new EmailAlreadyInUseException("Email already in use");
         }
 
         User user = new User();
@@ -58,10 +60,10 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid credentials"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new InvalidCredentialsException("Invalid credentials");
         }
 
         String token = jwtUtil.generateToken(

@@ -8,11 +8,16 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 // @RequiredArgsConstructor
@@ -28,7 +33,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     // private AuthenticationFilter(JwtUtils jwtUtil) {
     // this.jwtUtil = jwtUtil;
     // }
-
     // Routes that don't need a token
     private static final List<String> PUBLIC_PATHS = List.of(
             "/api/auth/register",
@@ -53,8 +57,15 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         // No token at all → 401
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             System.out.println("\nMissing or malformed Authorization header: " + authHeader + "\n");
+            exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+
+            Map<String, String> message = Map.of("message", "Unauthorized access");
+
+            return exchange.getResponse().writeWith(Mono.fromCallable(() -> {
+                ObjectMapper objectMapper = new ObjectMapper();
+                return exchange.getResponse().bufferFactory().wrap(objectMapper.writeValueAsBytes(message));
+            }));
         }
 
         String token = authHeader.substring(7);
@@ -63,7 +74,13 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         if (!jwtUtil.isTokenValid(token)) {
             System.out.println("\nInvalid token in gateway: " + token + "\n");
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+            exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+            Map<String, String> message = Map.of("message", "Unauthorized access");
+
+            return exchange.getResponse().writeWith(Mono.fromCallable(() -> {
+                ObjectMapper objectMapper = new ObjectMapper();
+                return exchange.getResponse().bufferFactory().wrap(objectMapper.writeValueAsBytes(message));
+            }));
         }
 
         // Token is valid — extract claims and add headers

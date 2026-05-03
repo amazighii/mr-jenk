@@ -41,6 +41,9 @@ public class Media {
     @Field("product_id")
     private String productId;
 
+    @Field("user_id")
+    private String userId;
+
     @NonNull
     @Field("seller_id")
     private String sellerId;

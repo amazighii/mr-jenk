@@ -41,8 +41,9 @@ public class JwtFilter extends OncePerRequestFilter {
                         List.of(new SimpleGrantedAuthority("ROLE_" + role)));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
+            } else {
+                System.out.println("\nInvalid token in user service: " + token + "\n");
             }
-            System.out.println("\nInvalid token in user service: " + token + "\n");
 
         }
 

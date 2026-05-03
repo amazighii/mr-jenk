@@ -41,6 +41,15 @@ public class MediaController {
         return ResponseEntity.status(201).body(response);
     }
 
+    @PostMapping("/profile")
+    public ResponseEntity<ResponseAddMediaEntityWrapper> addProfileImage(
+            @RequestParam("file") MultipartFile file,
+            @RequestHeader("X-User-Id") String userId
+    ) {
+        ResponseAddMediaEntityWrapper response = mediaService.addProfileImage(file, userId);
+        return ResponseEntity.status(201).body(response);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<UpdateMediaResponse> updateMedia(
             @PathVariable("id") String productId,

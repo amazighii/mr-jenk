@@ -1,6 +1,8 @@
 package com.buy01.media.repositories;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -14,6 +16,10 @@ public interface MediaRepository extends MongoRepository<Media, String> {
     Optional<ArrayList<Media>> findAllByProductId(String productId);
 
     Optional<Media> findByUrl(String url);
+
+    List<Media> findAllByUserId(String userId);
+
+    List<Media> findByProductIdIsNullAndUserIdIsNullAndAddedAtBefore(Date addedAt);
 
     // Optional<Media> findByUrlAndSellerId(String url, String sellerId);
 }

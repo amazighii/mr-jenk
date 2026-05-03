@@ -1,9 +1,12 @@
 package com.buy01.media.services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.tika.Tika;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +32,9 @@ public class MediaService {
     private final MediaRepository mediaRepository;
     private static final Tika tika = new Tika();
 
+    @Value("${media.orphan.max-age-minutes:1}")
+    private int orphanMaxAgeMinutes;
+
     public MediaService(MinioService minioService,
             MediaRepository mediaRepository
     ) {
@@ -38,7 +44,7 @@ public class MediaService {
 
     public ResponseAddMediaEntityWrapper addMediaEntity(MultipartFile[] files, String sellerId) {
         ResponseAddMediaEntityWrapper responseAddMediaEntityWrapper = new ResponseAddMediaEntityWrapper();
-        ArrayList<ResponseAddMediaEntity> response = this.iterateOverFiles(files, sellerId, null);
+        ArrayList<ResponseAddMediaEntity> response = this.iterateOverFiles(files, sellerId, null, null);
 
         responseAddMediaEntityWrapper.setResponse(response);
 
@@ -46,11 +52,21 @@ public class MediaService {
 
     }
 
-    private ArrayList<ResponseAddMediaEntity> iterateOverFiles(MultipartFile[] files, String sellerId, String productId) {
+    public ResponseAddMediaEntityWrapper addProfileImage(MultipartFile file, String userId) {
+        ResponseAddMediaEntity response = validateMedia(file, userId, null, userId);
+        return new ResponseAddMediaEntityWrapper(new ArrayList<>(List.of(response)));
+    }
+
+    private ArrayList<ResponseAddMediaEntity> iterateOverFiles(
+            MultipartFile[] files,
+            String sellerId,
+            String productId,
+            String userId
+    ) {
         ArrayList<ResponseAddMediaEntity> response = new ArrayList<>();
 
         for (MultipartFile file : files) {
-            ResponseAddMediaEntity responseAddMediaEntity = validateMedia(file, sellerId, productId);
+            ResponseAddMediaEntity responseAddMediaEntity = validateMedia(file, sellerId, productId, userId);
             response.add(responseAddMediaEntity);
         }
 
@@ -58,7 +74,12 @@ public class MediaService {
 
     }
 
-    private ResponseAddMediaEntity validateMedia(MultipartFile file, String sellerId, String productId) {
+    private ResponseAddMediaEntity validateMedia(
+            MultipartFile file,
+            String sellerId,
+            String productId,
+            String userId
+    ) {
         if (file == null || file.isEmpty()) {
             throw new EmptyMediaFileException("File is required and cannot be empty.");
         }
@@ -99,6 +120,7 @@ public class MediaService {
         media.setSellerId(sellerId);
         media.setAddedAt(new Date());
         media.setProductId(productId);
+        media.setUserId(userId);
         try {
             mediaRepository.save(media);
         } catch (RuntimeException ex) {
@@ -140,7 +162,7 @@ public class MediaService {
 
     public UpdateMediaResponse updateMedia(
             MultipartFile[] newFiles, String[] oldUrls, String sellerId, String productId) {
-        ArrayList<ResponseAddMediaEntity> response = this.iterateOverFiles(newFiles, sellerId, productId);
+        ArrayList<ResponseAddMediaEntity> response = this.iterateOverFiles(newFiles, sellerId, productId, null);
 
         for (String url : oldUrls) {
             deleteSingleMediaByUrl(url, sellerId);
@@ -168,4 +190,29 @@ public class MediaService {
         }
 
     }
+
+    public int deleteOldOrphanMedia() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, -orphanMaxAgeMinutes);
+
+        List<Media> orphanMedia = mediaRepository
+                .findByProductIdIsNullAndUserIdIsNullAndAddedAtBefore(calendar.getTime());
+
+        for (Media media : orphanMedia) {
+            deleteMedia(media);
+        }
+
+        return orphanMedia.size();
+    }
+
+    private void deleteMedia(Media media) {
+        mediaRepository.delete(media);
+
+        try {
+            minioService.deleteFile(media.getObjectName());
+        } catch (MinioException e) {
+            throw new MediaPersistenceException("Faild to delete this media", e);
+        }
+    }
+
 }

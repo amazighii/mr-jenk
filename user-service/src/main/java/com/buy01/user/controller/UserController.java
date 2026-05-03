@@ -1,34 +1,42 @@
 package com.buy01.user.controller;
 
+import com.buy01.user.dto.UpdateAvatarRequest;
 import com.buy01.user.dto.UserProfileResponse;
-import com.buy01.user.model.User;
-import com.buy01.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import com.buy01.user.dto.UpdateAvatarResponse;
+import com.buy01.user.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
-@RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/me")
     public ResponseEntity<UserProfileResponse> getMe(Authentication auth) {
         String userId = auth.getName();  // set by JwtFilter as the principal
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserProfileResponse response = userService.getMe(userId);
 
-        UserProfileResponse response = new UserProfileResponse();
-        response.setId(user.getId());
-        response.setEmail(user.getEmail());
-        response.setFirstName(user.getFirstName());
-        response.setLastName(user.getLastName());
-        response.setAvatarUrl(user.getAvatarUrl());
-        response.setRole(user.getRole().name());
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<UpdateAvatarResponse> updateAvatar(
+            Authentication auth,
+            @Valid @RequestBody UpdateAvatarRequest request
+    ) {
+        String userId = auth.getName();
+
+        UpdateAvatarResponse response = userService.updateAvatar(userId, request);
 
         return ResponseEntity.ok(response);
     }
