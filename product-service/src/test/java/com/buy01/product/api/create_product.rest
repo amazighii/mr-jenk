@@ -1,0 +1,57 @@
+#-----
+
+
+### Get all/api products — public, no token needed
+GET http://localhost:8080/api/products
+
+### Get single product by ID — replace 69e8d5763b1a098bf1cc644c with a real one
+GET http://localhost:8080/api/products/69e8d5703b1a098bf1cc644b
+# Authorization: Bearer eyJhbGciOiJIUzI1NJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1OTY4MiwiZXhwIjoxNzc2OTQ2MDgyfQ.uMMdu3rrA0RRGMBtgVAezuOz8iHcP9pjV9QFH8NNX-M
+
+
+### Create product — valid seller
+POST http://localhost:8080/api/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1OTY4MiwiZXhwIjoxNzc2OTQ2MDgyfQ.uMMdu3rrA0RRGMBtgVAezuOz8iHcP9pjV9QFH8NNX-M
+
+{
+    "name": "Test Product amazighi",
+    "description": "This is a test product.",
+    "price": 200,
+    "quantity": 5000,
+    "imageUrls": ["http://example.com/image1.jpg", "http://example.com/image2.jpg"]
+}
+
+### Create product — missing required fields (expect 400)
+POST http://localhost:8080/api/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1OTY4MiwiZXhwIjoxNzc2OTQ2MDgyfQ.uMMdu3rrA0RRGMBtgVAezuOz8iHcP9pjV9QFH8NNX-M
+
+{
+    "description": "Missing name and price."
+}
+
+### Create product — price is zero (expect 400)
+POST http://localhost:8080/api/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+
+{
+    "name": "Free Product",
+    "description": "Price should be greater than 0.",
+    "price": 0,
+    "quantity": 10,
+    "imageUrls": ["http://example.com/image.jpg"]
+}
+
+### Create product — no token (expect 401)
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+    "name": "Unauthorized Product",
+    "description": "No token provided.",
+    "price": 100,
+    "quantity": 10
+}
+

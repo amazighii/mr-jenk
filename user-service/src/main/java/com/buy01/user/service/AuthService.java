@@ -1,10 +1,16 @@
 package com.buy01.user.service;
 
 import com.buy01.user.dto.*;
+import com.buy01.user.exception.EmailAlreadyInUseException;
+import com.buy01.user.exception.InvalidCredentialsException;
 import com.buy01.user.model.User;
 import com.buy01.user.repository.UserRepository;
 import com.buy01.user.security.JwtUtil;
+
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +22,25 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    @Autowired
+    private org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
+
+    @PostConstruct
+    public void checkDb() {
+        System.out.println(">>> ACTUAL DB USED = " + mongoTemplate.getDb().getName());
+    }
+
+    @Autowired
+    private org.springframework.core.env.Environment env;
+
+    @PostConstruct
+    public void debugMongo() {
+        System.out.println("URI = " + env.getProperty("spring.data.mongodb.uri"));
+    }
+
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already in use");
+            throw new EmailAlreadyInUseException("Email already in use");
         }
 
         User user = new User();
@@ -31,23 +53,21 @@ public class AuthService {
         User saved = userRepository.save(user);
 
         String token = jwtUtil.generateToken(
-            saved.getId(), saved.getEmail(), saved.getRole().name()
-        );
+                saved.getId(), saved.getEmail(), saved.getRole().name());
 
         return new AuthResponse(token, saved.getRole().name(), saved.getId());
     }
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid credentials"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new InvalidCredentialsException("Invalid credentials");
         }
 
         String token = jwtUtil.generateToken(
-            user.getId(), user.getEmail(), user.getRole().name()
-        );
+                user.getId(), user.getEmail(), user.getRole().name());
 
         return new AuthResponse(token, user.getRole().name(), user.getId());
     }

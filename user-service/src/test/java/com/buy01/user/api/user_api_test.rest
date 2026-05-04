@@ -1,0 +1,228 @@
+
+
+### REGISTER - VALID
+
+
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+# X-Internal-Request: true
+
+{
+"name": "ismail ichi",
+"email": "ismail.ichi@example.com",
+"firstName": "ismail",
+"lastName": "iichi",
+"avatarUrl": "http://example.com/avatar.png",
+"password": "password123",
+"role": "SELLER"
+}
+
+
+
+### REGISTER - DUPLICATE EMAIL
+
+
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+"name": "john doe",
+"email": "john.doe@example.com",
+"firstName": "john",
+"lastName": "doe",
+"avatarUrl": "http://example.com/avatar.png",
+"password": "password123",
+"role": "SELLER"
+}
+
+
+
+### REGISTER - INVALID EMAIL
+
+
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+"name": "John Doe",
+"email": "invalid-email",
+"password": "password123"
+}
+
+
+
+### LOGIN - VALID
+
+
+
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+"email": "ismail.ichi@example.com",
+"password": "password123"
+}
+
+
+
+### LOGIN - WRONG PASSWORD
+
+
+
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+"email": "john.doe@example.com",
+"password": "wrongpassword"
+}
+
+
+
+### LOGIN - USER NOT FOUND
+
+
+
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+"email": "unknown@example.com",
+"password": "password123"
+}
+
+
+
+### GET PROFILE (REQUIRES TOKEN)
+
+
+
+GET http://localhost:8080/api/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU2MTFkYmFiNjE0MGZiMWI5ZGRkNWYiLCJlbWFpbCI6ImlzbWFpbC5pc21haWxAZXhhbXBsZS5jb20iLCJyb2xlIjoiQ0xJRU5UIiwiaWF0IjoxNzc2Nzg2MDM3LCJleHAiOjE3NzY4NzI0Mzd9.V-pwudnjtsaLFIQJnwLTY3lfaCQ1_OGR4ArgW3v0gZQ
+
+
+
+
+### GET PROFILE - NO TOKEN
+
+
+
+GET http://localhost:8080/api/users/me
+
+
+### GET PROFILE - INVALID TOKEN
+
+GET http://localhost:8080/api/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eXyJzdWIiOiI2OWUzNzg5ZjMwZmU2MWE0NTVhM2MzOWQiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6IkNMSUVOVCIsImlhdCI6MTc3NjY4MTkyNiwiZXhwIjoxNzc2NzY4MzI2fQ.0wohd-M-k1fuCGiSfOn04ssgCcDhhAJ0B4G1e4omai8
+
+
+
+
+### UPDATE PROFILE (PUT)
+
+
+
+PUT http://localhost:8080/api/users/me
+Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
+
+{
+"firstName": "John",
+"lastName": "Updated",
+"avatarUrl": "http://example.com/avatar.png"
+}
+
+
+
+### UPDATE PROFILE - NO TOKEN
+
+
+
+PUT http://localhost:8080/api/users/me
+Content-Type: application/json
+
+{
+"firstName": "John",
+"lastName": "Updated"
+}
+
+
+
+### WRONG PATH (SHOULD FAIL)
+
+GET http://localhost:8080/api/user/me
+
+
+### WRONG METHOD (SHOULD FAIL)
+
+GET http://localhost:8080/api/auth/login
+
+### EMPTY BODY REGISTER
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{}
+
+### MALFORMED JSON
+
+
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+"name": "John Doe",
+"email": "john.doe@example.com",
+"password": "password123"
+}
+
+### =========================
+
+### CORS PREFLIGHT TEST
+
+### =========================
+
+POST http://localhost:8080/api/auth/login
+Origin: http://localhost:4200
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: content-type, authorization
+Content-Type: application/json
+
+{
+"email": "ismail.ichi@example.com",
+"password": "password123"
+}
+
+
+### ==================================================================================
+
+### DIRECT ACCESS TEST (BYPASS GATEWAY)
+
+### =========================
+
+GET http://localhost:8081/api/users/me
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### =========================
+
+### DIRECT ACCESS - NO TOKEN
+
+### =========================
+
+GET http://localhost:8081/api/users/me
+
+### =========================
+
+### DIRECT ACCESS - FAKE INTERNAL HEADER
+
+### =========================
+
+GET http://localhost:8081/api/users/me
+Authorization: Bearer YOUR_TOKEN_HERE
+X-Internal-Request: true
+
+### ==================================================================================

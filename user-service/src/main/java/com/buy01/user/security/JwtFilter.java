@@ -22,8 +22,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain)
+            HttpServletResponse response,
+            FilterChain chain)
             throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
@@ -33,16 +33,18 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (jwtUtil.isTokenValid(token)) {
                 String userId = jwtUtil.extractUserId(token);
-                String role   = jwtUtil.extractRole(token);
+                String role = jwtUtil.extractRole(token);
 
                 var auth = new UsernamePasswordAuthenticationToken(
-                    userId,
-                    null,
-                    List.of(new SimpleGrantedAuthority("ROLE_" + role))
-                );
+                        userId,
+                        null,
+                        List.of(new SimpleGrantedAuthority("ROLE_" + role)));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
+            } else {
+                System.out.println("\nInvalid token in user service: " + token + "\n");
             }
+
         }
 
         chain.doFilter(request, response);
