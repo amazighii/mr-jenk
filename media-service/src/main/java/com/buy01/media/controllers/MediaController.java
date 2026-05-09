@@ -14,10 +14,8 @@ import com.buy01.media.dto.DeleteMediaResponse;
 import com.buy01.media.dto.ResponseAddMediaEntityWrapper;
 import com.buy01.media.services.MediaService;
 
-import jakarta.websocket.server.PathParam;
 
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 
 import com.buy01.media.dto.UpdateMediaResponse;
