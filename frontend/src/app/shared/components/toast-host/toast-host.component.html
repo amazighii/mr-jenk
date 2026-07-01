@@ -1,0 +1,12 @@
+<div class="toasts" aria-live="polite" aria-relevant="additions removals">
+  @for (t of toast.toasts(); track t.id) {
+    <div class="toast" [attr.data-kind]="t.kind">
+      <div class="toast__title">{{ t.title }}</div>
+      @if (t.message) {
+        <div class="toast__message">{{ t.message }}</div>
+      }
+      <button type="button" class="toast__close" (click)="toast.dismiss(t.id)" aria-label="Dismiss">×</button>
+    </div>
+  }
+</div>
+

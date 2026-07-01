@@ -1,6 +1,6 @@
 ### Delete product — valid seller owns the product (expect 204)
 DELETE http://localhost:8080/api/products/{id}
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+Authorization: Bearer SELLER_TOKEN_HERE
 
 ### Delete product — wrong seller token (expect 404 — ownership check)
 DELETE http://localhost:8080/api/products/{id}
@@ -11,7 +11,7 @@ DELETE http://localhost:8080/api/products/{id}
 
 ### Delete product — product does not exist (expect 404)
 DELETE http://localhost:8080/api/products/000000000000000000000000
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+Authorization: Bearer SELLER_TOKEN_HERE
 
 ### Delete product — CLIENT role (expect 403)
 DELETE http://localhost:8080/api/products/{id}

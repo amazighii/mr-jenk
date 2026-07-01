@@ -30,7 +30,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            System.out.println("\nReceived token in product service: " + token + "\n");
             if (jwtUtils.isTokenValid(token)) {
                 String userId = jwtUtils.extractUserId(token);
                 String role = jwtUtils.extractRole(token);
@@ -41,9 +40,9 @@ public class JwtFilter extends OncePerRequestFilter {
                         List.of(new SimpleGrantedAuthority("ROLE_" + role)));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
+            } else {
+                System.out.println("\nInvalid token in product service.\n");
             }
-            System.out.println("\nInvalid token in product service: " + token + "\n");
-
         }
 
         chain.doFilter(request, response);

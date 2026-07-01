@@ -24,9 +24,9 @@ public class ProductRequest {
 
     @NotNull
     @Min(value = 0, message = "Quantity cannot be negative")
-    private Integer quantity;
+    private Long quantity;
 
     // Optional — seller links images after uploading to Media Service
-    @NotNull
+    // @NotNull
     private List<String> imageUrls;
 }

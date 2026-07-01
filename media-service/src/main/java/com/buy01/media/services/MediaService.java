@@ -36,8 +36,7 @@ public class MediaService {
     private int orphanMaxAgeMinutes;
 
     public MediaService(MinioService minioService,
-            MediaRepository mediaRepository
-    ) {
+            MediaRepository mediaRepository) {
         this.minioService = minioService;
         this.mediaRepository = mediaRepository;
     }
@@ -53,7 +52,13 @@ public class MediaService {
     }
 
     public ResponseAddMediaEntityWrapper addProfileImage(MultipartFile file, String userId) {
+        List<Media> previousProfileMedia = mediaRepository.findAllByUserId(userId);
         ResponseAddMediaEntity response = validateMedia(file, userId, null, userId);
+
+        for (Media media : previousProfileMedia) {
+            deleteMedia(media);
+        }
+
         return new ResponseAddMediaEntityWrapper(new ArrayList<>(List.of(response)));
     }
 
@@ -61,8 +66,7 @@ public class MediaService {
             MultipartFile[] files,
             String sellerId,
             String productId,
-            String userId
-    ) {
+            String userId) {
         ArrayList<ResponseAddMediaEntity> response = new ArrayList<>();
 
         for (MultipartFile file : files) {
@@ -78,8 +82,7 @@ public class MediaService {
             MultipartFile file,
             String sellerId,
             String productId,
-            String userId
-    ) {
+            String userId) {
         if (file == null || file.isEmpty()) {
             throw new EmptyMediaFileException("File is required and cannot be empty.");
         }
@@ -103,15 +106,22 @@ public class MediaService {
         }
 
         String url;
+        String cleanedName;
+        cleanedName = file.getOriginalFilename().replace(" ", "-");
+
         try {
-            url = minioService.uploadFile(file);
+            url = minioService.uploadFile(file, cleanedName);
         } catch (Exception ex) {
+            System.out.println(
+                    "------------------------------------------------------------------------------------------------");
+            System.out.println(ex.getMessage());
             throw new MediaStorageException("Failed to upload file to storage.", ex);
         }
 
         String objectName = url.substring(url.lastIndexOf("/") + 1);
 
         Media media = new Media();
+
         media.setUrl(url);
         media.setBucketName(minioService.getBucketName());
         media.setObjectName(objectName);
@@ -124,6 +134,7 @@ public class MediaService {
         try {
             mediaRepository.save(media);
         } catch (RuntimeException ex) {
+            System.out.println("-----------------------------------------------------------------------");
             throw new MediaPersistenceException("Failed to save media metadata.", ex);
         }
 
@@ -132,8 +143,7 @@ public class MediaService {
                 media.getFileName(),
                 contentType,
                 media.getUrl(),
-                media.getAddedAt().toString()
-        );
+                media.getAddedAt().toString());
 
     }
 
@@ -162,6 +172,9 @@ public class MediaService {
 
     public UpdateMediaResponse updateMedia(
             MultipartFile[] newFiles, String[] oldUrls, String sellerId, String productId) {
+        newFiles = newFiles == null ? new MultipartFile[0] : newFiles;
+        oldUrls = oldUrls == null ? new String[0] : oldUrls;
+
         ArrayList<ResponseAddMediaEntity> response = this.iterateOverFiles(newFiles, sellerId, productId, null);
 
         for (String url : oldUrls) {
@@ -172,19 +185,23 @@ public class MediaService {
     }
 
     private void deleteSingleMediaByUrl(String url, String sellerId) {
-        Media media = mediaRepository.findByUrl(url)
-                .orElseThrow(() -> new MediaNotFound());
+        Media media = mediaRepository.findByUrl(url).orElse(null);
+
+        if (media == null) {
+            System.out.println("Media metadata already missing for URL during update: " + url);
+            return;
+        }
 
         if (!media.getSellerId().equals(sellerId)) {
             throw new ForbiddenAction("Forbidden: can not perform this aciton");
         }
+
         mediaRepository.deleteByUrl(url);
 
         try {
             String objectName = media.getUrl().substring(media.getUrl().lastIndexOf("/") + 1);
 
             minioService.deleteFile(objectName);
-
         } catch (MinioException e) {
             throw new MediaPersistenceException("Faild to delete this media", e);
         }

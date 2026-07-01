@@ -2,12 +2,22 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
 
+## Backend gateway
+
+The frontend must call the backend **only via the API Gateway**:
+
+- Gateway: `http://localhost:8080`
+- Frontend dev server: `http://localhost:4200`
+
+See `API_MAPPING.md` for the exact routes and DTO shapes inferred from backend code.
+
 ## Development server
 
 To start a local development server, run:
 
 ```bash
-ng serve
+npm install
+npm start
 ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.

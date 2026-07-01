@@ -1,0 +1,17 @@
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #fbfbfa;
+  --border: rgba(17, 24, 39, 0.1);
+  --text: #111827;
+  --muted: rgba(17, 24, 39, 0.7);
+  --soft: rgba(17, 24, 39, 0.05);
+  --primary: #0f766e; /* deep teal */
+  --primary-2: #115e59;
+  --danger: #b42318;
+  --success: #067647;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+  --shadow-sm: 0 6px 18px rgba(17, 24, 39, 0.05);
+}
+

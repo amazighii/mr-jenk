@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.buy01.product.dto.ProductRequest;
 import com.buy01.product.dto.ProductResponse;
+import com.buy01.product.exception.ProductAccessDeniedException;
+import com.buy01.product.exception.ProductNotFoundException;
 import com.buy01.product.kafka.KafkaProducerConfig;
 import com.buy01.product.kafka.ProductEvent;
 import com.buy01.product.model.EventType;
@@ -32,7 +34,7 @@ public class ProductService {
 
     public ProductResponse getProductById(String id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found."));
         return toResponse(product);
     }
 
@@ -56,27 +58,26 @@ public class ProductService {
     }
 
     public ProductResponse updateProduct(String id, ProductRequest request, String sellerId) {
-        Product product = productRepository.findByIdAndSellerId(id, sellerId)
-                .orElseThrow(() -> new RuntimeException("Product not found or access denied"));
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
+        if (!sellerId.equals(product.getSellerId())) {
+            throw new ProductAccessDeniedException("You do not have permission to modify this product.");
+        }
 
         applyRequest(product, request);
         Product saved = productRepository.save(product);
-
-        // kafkaTemplate.send(KafkaProducerConfig.PRODUCT_TOPIC,
-        //         new ProductEvent(
-        //                 EventType.PRODUCT_UPDATED,
-        //                 saved.getId(),
-        //                 sellerId,
-        //                 saved.getName(),
-        //                 product.getImageUrls()
-        //         ));
 
         return toResponse(saved);
     }
 
     public void deleteProduct(String id, String sellerId) {
-        Product product = productRepository.findByIdAndSellerId(id, sellerId)
-                .orElseThrow(() -> new RuntimeException("Product not found or access denied"));
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found."));
+
+        if (!sellerId.equals(product.getSellerId())) {
+            throw new ProductAccessDeniedException("You do not have permission to delete this product.");
+        }
 
         productRepository.delete(product);
 

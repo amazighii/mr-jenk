@@ -122,7 +122,7 @@ public class ProductServiceTest {
         ProductRequest request = createProductRequest();
         request.setName("Updated Product");
 
-        when(productRepository.findByIdAndSellerId("product-1", "seller-1")).thenReturn(Optional.of(product));
+        when(productRepository.findById("product-1")).thenReturn(Optional.of(product));
         when(productRepository.save(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
@@ -140,7 +140,7 @@ public class ProductServiceTest {
     @Test
     void updateProduct_ShouldThrowException_WhenProductDoesNotBelongToSeller() {
         // Arrange
-        when(productRepository.findByIdAndSellerId("product-1", "seller-2")).thenReturn(Optional.empty());
+        when(productRepository.findById("product-1")).thenReturn(Optional.empty());
 
         // Act + Assert
         assertThrows(RuntimeException.class, () -> {
@@ -154,7 +154,7 @@ public class ProductServiceTest {
     void deleteProduct_ShouldDeleteProductAndPublishDeletedEvent() {
         // Arrange
         Product product = createProduct("product-1", "seller-1");
-        when(productRepository.findByIdAndSellerId("product-1", "seller-1")).thenReturn(Optional.of(product));
+        when(productRepository.findById("product-1")).thenReturn(Optional.of(product));
 
         // Act
         productService.deleteProduct("product-1", "seller-1");
@@ -176,7 +176,7 @@ public class ProductServiceTest {
     @Test
     void deleteProduct_ShouldThrowException_WhenProductDoesNotBelongToSeller() {
         // Arrange
-        when(productRepository.findByIdAndSellerId("product-1", "seller-2")).thenReturn(Optional.empty());
+        when(productRepository.findById("product-1")).thenReturn(Optional.empty());
 
         // Act + Assert
         assertThrows(RuntimeException.class, () -> {
@@ -192,7 +192,7 @@ public class ProductServiceTest {
         request.setName("Gaming Keyboard");
         request.setDescription("Mechanical keyboard");
         request.setPrice(new BigDecimal("79.99"));
-        request.setQuantity(12);
+        request.setQuantity(12L);
         request.setImageUrls(List.of("https://cdn.example.com/product.png"));
         return request;
     }

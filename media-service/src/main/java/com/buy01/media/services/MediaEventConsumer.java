@@ -20,16 +20,12 @@ public class MediaEventConsumer {
 
     public MediaEventConsumer(
             MinioService minioService,
-            MediaRepository mediaRepository
-    ) {
+            MediaRepository mediaRepository) {
         this.minioService = minioService;
         this.mediaRepository = mediaRepository;
     }
 
-    @KafkaListener(
-            topics = "product-events",
-            groupId = "media-service-group"
-    )
+    @KafkaListener(topics = "product-events", groupId = "media-service-group")
     public void handleProductEvent(ProductEvent event) {
         switch (event.getEventType()) {
             case PRODUCT_CREATED ->
@@ -50,7 +46,7 @@ public class MediaEventConsumer {
         for (String url : event.getImageUrls()) {
             Media media = mediaRepository.findByUrl(url)
                     .orElseThrow(() -> new MediaNotFound());
-
+            System.out.println("Associating media with URL: {} to product ID: {}" + url + event.getProductId());
             media.setProductId(event.getProductId());
             mediaRepository.save(media);
         }

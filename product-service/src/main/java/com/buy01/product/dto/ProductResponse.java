@@ -12,7 +12,7 @@ public class ProductResponse {
     private String name;
     private String description;
     private BigDecimal price;
-    private Integer quantity;
+    private Long quantity;
     private String sellerId;
     private List<String> imageUrls;
     private Instant createdAt;

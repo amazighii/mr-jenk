@@ -128,7 +128,7 @@ paths:
                       - CLIENT
                 example:
                   message: Login successful
-                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaXNBZG1pbiI6ZmFsc2V9.EypViEDiJhjeuXgjtGdibxrFPFZyYKn-KqFeAw3c2No
+                  token: <JWT_TOKEN>
                   role: SELLER
 
         "401":
@@ -168,8 +168,8 @@ paths:
                   avatar_url:
                     type: string
                 example:
-                  username: amazighi
-                  email: amazighi@gmail.com
+                  username: demo_user
+                  email: demo@example.com
                   role: CLIENT
                   avatar_url: https://host:port/avatar_url
     put:

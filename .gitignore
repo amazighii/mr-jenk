@@ -16,8 +16,11 @@ dist/
 .env
 *.env
 
+# Local TLS material
+certs/
+*.p12
+
 # Logs
 logs/
 *.log
-
 

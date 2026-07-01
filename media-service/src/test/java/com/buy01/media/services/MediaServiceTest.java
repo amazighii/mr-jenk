@@ -55,7 +55,7 @@ public class MediaServiceTest {
     void addMediaEntity_ShouldUploadAndSaveMedia_WhenFileIsValid() throws Exception {
         // Arrange
         MultipartFile file = imageFile("product.png");
-        when(minioService.uploadFile(file)).thenReturn("http://minio/media-bucket/object-product.png");
+        when(minioService.uploadFile(file, "product.png")).thenReturn("http://minio/media-bucket/object-product.png");
         when(minioService.getBucketName()).thenReturn("media-bucket");
         when(mediaRepository.save(any(Media.class))).thenAnswer(invocation -> {
             Media media = invocation.getArgument(0);
@@ -91,7 +91,7 @@ public class MediaServiceTest {
     void addProfileImage_ShouldSaveMediaWithUserId_WhenFileIsValid() throws Exception {
         // Arrange
         MultipartFile file = imageFile("avatar.png");
-        when(minioService.uploadFile(file)).thenReturn("http://minio/media-bucket/avatar-object.png");
+        when(minioService.uploadFile(file, "avatar.png")).thenReturn("http://minio/media-bucket/avatar-object.png");
         when(minioService.getBucketName()).thenReturn("media-bucket");
         when(mediaRepository.save(any(Media.class))).thenAnswer(invocation -> {
             Media media = invocation.getArgument(0);
@@ -123,7 +123,7 @@ public class MediaServiceTest {
             mediaService.addMediaEntity(new MultipartFile[] { file }, "seller-1");
         });
 
-        verify(minioService, never()).uploadFile(any());
+        verify(minioService, never()).uploadFile(any(), any());
         verify(mediaRepository, never()).save(any(Media.class));
     }
 
@@ -137,7 +137,7 @@ public class MediaServiceTest {
             mediaService.addMediaEntity(new MultipartFile[] { file }, "seller-1");
         });
 
-        verify(minioService, never()).uploadFile(any());
+        verify(minioService, never()).uploadFile(any(), any());
         verify(mediaRepository, never()).save(any(Media.class));
     }
 
@@ -145,7 +145,7 @@ public class MediaServiceTest {
     void addMediaEntity_ShouldThrowException_WhenStorageFails() throws Exception {
         // Arrange
         MultipartFile file = imageFile("product.png");
-        when(minioService.uploadFile(file)).thenThrow(new RuntimeException("storage down"));
+        when(minioService.uploadFile(file, "product.png")).thenThrow(new RuntimeException("storage down"));
 
         // Act + Assert
         assertThrows(MediaStorageException.class, () -> {
@@ -159,7 +159,7 @@ public class MediaServiceTest {
     void addMediaEntity_ShouldThrowException_WhenMetadataSaveFails() throws Exception {
         // Arrange
         MultipartFile file = imageFile("product.png");
-        when(minioService.uploadFile(file)).thenReturn("http://minio/media-bucket/object-product.png");
+        when(minioService.uploadFile(file, "product.png")).thenReturn("http://minio/media-bucket/object-product.png");
         when(minioService.getBucketName()).thenReturn("media-bucket");
         when(mediaRepository.save(any(Media.class))).thenThrow(new RuntimeException("database down"));
 
@@ -218,7 +218,7 @@ public class MediaServiceTest {
         MultipartFile newFile = imageFile("new-product.png");
         Media oldMedia = media("old-media", "seller-1", "http://minio/media-bucket/old-object.png");
 
-        when(minioService.uploadFile(newFile)).thenReturn("http://minio/media-bucket/new-object.png");
+        when(minioService.uploadFile(newFile, "new-product.png")).thenReturn("http://minio/media-bucket/new-object.png");
         when(minioService.getBucketName()).thenReturn("media-bucket");
         when(mediaRepository.save(any(Media.class))).thenAnswer(invocation -> {
             Media media = invocation.getArgument(0);

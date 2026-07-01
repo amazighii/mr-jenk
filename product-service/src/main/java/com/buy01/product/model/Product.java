@@ -19,7 +19,7 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
-    private int quantity;
+    private long quantity;
     // To check later with Media
     private List<String> imageUrls; // set later via Media Service 
     private String sellerId; // reference to User ID of the seller

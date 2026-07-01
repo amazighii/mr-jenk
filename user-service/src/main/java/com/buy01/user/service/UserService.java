@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.buy01.user.dto.UpdateAvatarRequest;
 import com.buy01.user.dto.UpdateAvatarResponse;
+import com.buy01.user.dto.PublicUserProfileResponse;
 import com.buy01.user.dto.UserProfileResponse;
 import com.buy01.user.exception.UserNotFoundException;
 import com.buy01.user.model.User;
@@ -25,6 +26,20 @@ public class UserService {
         UserProfileResponse response = new UserProfileResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setAvatarUrl(user.getAvatarUrl());
+        response.setRole(user.getRole().name());
+
+        return response;
+    }
+
+    public PublicUserProfileResponse getPublicProfile(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        PublicUserProfileResponse response = new PublicUserProfileResponse();
+        response.setId(user.getId());
         response.setFirstName(user.getFirstName());
         response.setLastName(user.getLastName());
         response.setAvatarUrl(user.getAvatarUrl());

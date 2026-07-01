@@ -5,7 +5,7 @@
 # PUT http://localhost:8080/api/products/{id}
 PUT http://localhost:8080/api/products/{id}
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+Authorization: Bearer SELLER_TOKEN_HERE
 
 {
     "name": "Updated Product Name",
@@ -18,7 +18,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzM
 # PUT http://localhost:8080/api/products/{id}
 PUT http://localhost:8080/api/products/{id}
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+Authorization: Bearer SELLER_TOKEN_HERE
 
 {
     "name": "Same Product Name",
@@ -31,7 +31,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzM
 # PUT http://localhost:8080/api/products/{id}
 PUT http://localhost:8080/api/products/{id}
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+Authorization: Bearer SELLER_TOKEN_HERE
 
 {
     "name": "Bad Price Product",
@@ -70,7 +70,7 @@ Content-Type: application/json
 ### Update product — product does not exist (expect 404)
 PUT http://localhost:8080/api/products/000000000000000000000000
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+Authorization: Bearer SELLER_TOKEN_HERE
 
 {
     "name": "Ghost Product",

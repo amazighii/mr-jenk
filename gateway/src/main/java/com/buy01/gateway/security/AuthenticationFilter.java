@@ -1,12 +1,11 @@
 package com.buy01.gateway.security;
 
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -16,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
+import java.time.Instant;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AuthenticationFilter implements GlobalFilter, Ordered {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     // private final jwtUtil;
     @Autowired
     private JwtUtils jwtUtil;
@@ -35,9 +37,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     // }
     // Routes that don't need a token
     private static final List<String> PUBLIC_PATHS = List.of(
+            // swagger docs and auth routes
+            "/v3/api-docs",
             "/api/auth/register",
             "/api/auth/login",
-            "/api/products", // Allow GET /api/products without auth
             "/actuator/health");
 
     @Override
@@ -45,7 +48,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         String path = exchange.getRequest().getPath().toString();
 
         // Skip auth for public routes
-        if (isPublic(path)) {
+        if (isPublic(exchange.getRequest().getMethod(), path)) {
             System.out.println("Public path accessed: " + path);
             return chain.filter(exchange);
         }
@@ -56,31 +59,16 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         // No token at all → 401
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("\nMissing or malformed Authorization header: " + authHeader + "\n");
-            exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-
-            Map<String, String> message = Map.of("message", "Unauthorized access");
-
-            return exchange.getResponse().writeWith(Mono.fromCallable(() -> {
-                ObjectMapper objectMapper = new ObjectMapper();
-                return exchange.getResponse().bufferFactory().wrap(objectMapper.writeValueAsBytes(message));
-            }));
+            return writeError(exchange, HttpStatus.UNAUTHORIZED, "Unauthorized",
+                    "Authentication token is missing or malformed.");
         }
 
         String token = authHeader.substring(7);
 
         // Invalid or expired token → 401
         if (!jwtUtil.isTokenValid(token)) {
-            System.out.println("\nInvalid token in gateway: " + token + "\n");
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-            Map<String, String> message = Map.of("message", "Unauthorized access");
-
-            return exchange.getResponse().writeWith(Mono.fromCallable(() -> {
-                ObjectMapper objectMapper = new ObjectMapper();
-                return exchange.getResponse().bufferFactory().wrap(objectMapper.writeValueAsBytes(message));
-            }));
+            return writeError(exchange, HttpStatus.UNAUTHORIZED, "Unauthorized",
+                    "Authentication token is invalid or expired.");
         }
 
         // Token is valid — extract claims and add headers
@@ -103,8 +91,22 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         return -1; // Run before all other filters
     }
 
-    private boolean isPublic(String path) {
+    private boolean isPublic(HttpMethod method, String path) {
         return PUBLIC_PATHS.stream().anyMatch(path::startsWith)
-                || path.startsWith("/api/products") && path.contains("GET");
+                || HttpMethod.GET.equals(method) && path.startsWith("/api/products");
+    }
+
+    private Mono<Void> writeError(ServerWebExchange exchange, HttpStatus status, String error, String message) {
+        exchange.getResponse().setStatusCode(status);
+        exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> body = Map.of(
+                "timestamp", Instant.now().toString(),
+                "status", status.value(),
+                "error", error,
+                "message", message);
+
+        return exchange.getResponse().writeWith(Mono.fromCallable(() ->
+                exchange.getResponse().bufferFactory().wrap(objectMapper.writeValueAsBytes(body))));
     }
 }

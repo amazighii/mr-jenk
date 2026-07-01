@@ -14,15 +14,31 @@ public class GatewayRoutesConfig {
 
                                 .route("user-service", r -> r
                                                 .path("/api/auth/**", "/api/users/**")
-                                                .uri("lb://user-service"))
+                                                .uri("lb://USER-SERVICE"))
 
                                 .route("product-service", r -> r
                                                 .path("/api/products", "/api/products/**")
-                                                .uri("lb://product-service"))
+                                                .uri("lb://PRODUCT-SERVICE"))
 
                                 .route("media-service", r -> r
                                                 .path("/api/media/**")
-                                                .uri("lb://media-service"))
+                                                .uri("lb://MEDIA-SERVICE"))
+
+                                // Swagger/OpenAPI aggregation: proxy each service's /v3/api-docs
+                                .route("openapi-user-service", r -> r
+                                                .path("/v3/api-docs/user-service")
+                                                .filters(f -> f.setPath("/v3/api-docs"))
+                                                .uri("lb://USER-SERVICE"))
+
+                                .route("openapi-product-service", r -> r
+                                                .path("/v3/api-docs/product-service")
+                                                .filters(f -> f.setPath("/v3/api-docs"))
+                                                .uri("lb://PRODUCT-SERVICE"))
+
+                                .route("openapi-media-service", r -> r
+                                                .path("/v3/api-docs/media-service")
+                                                .filters(f -> f.setPath("/v3/api-docs"))
+                                                .uri("lb://MEDIA-SERVICE"))
 
                                 .build();
         }

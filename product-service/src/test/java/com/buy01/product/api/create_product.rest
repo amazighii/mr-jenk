@@ -6,16 +6,16 @@ GET http://localhost:8080/api/products
 
 ### Get single product by ID — replace 69e8d5763b1a098bf1cc644c with a real one
 GET http://localhost:8080/api/products/69e8d5703b1a098bf1cc644b
-# Authorization: Bearer eyJhbGciOiJIUzI1NJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1OTY4MiwiZXhwIjoxNzc2OTQ2MDgyfQ.uMMdu3rrA0RRGMBtgVAezuOz8iHcP9pjV9QFH8NNX-M
+# Authorization: Bearer SELLER_TOKEN_HERE
 
 
 ### Create product — valid seller
 POST http://localhost:8080/api/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1OTY4MiwiZXhwIjoxNzc2OTQ2MDgyfQ.uMMdu3rrA0RRGMBtgVAezuOz8iHcP9pjV9QFH8NNX-M
+Authorization: Bearer SELLER_TOKEN_HERE
 
 {
-    "name": "Test Product amazighi",
+    "name": "Test Product",
     "description": "This is a test product.",
     "price": 200,
     "quantity": 5000,
@@ -25,7 +25,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzM
 ### Create product — missing required fields (expect 400)
 POST http://localhost:8080/api/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1OTY4MiwiZXhwIjoxNzc2OTQ2MDgyfQ.uMMdu3rrA0RRGMBtgVAezuOz8iHcP9pjV9QFH8NNX-M
+Authorization: Bearer SELLER_TOKEN_HERE
 
 {
     "description": "Missing name and price."
@@ -34,7 +34,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzM
 ### Create product — price is zero (expect 400)
 POST http://localhost:8080/api/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OWU4YWNhNTcyNjZlOWI4Y2YzMzUyOWUiLCJlbWFpbCI6ImlzbWFpbC5pY2hpQGV4YW1wbGUuY29tIiwicm9sZSI6IlNFTExFUiIsImlhdCI6MTc3Njg1NjIyOSwiZXhwIjoxNzc2OTQyNjI5fQ.Vu6M6oVNegDA33ywx_JSblw8ZRgOkwNCyecPVa1RVC4
+Authorization: Bearer SELLER_TOKEN_HERE
 
 {
     "name": "Free Product",
@@ -54,4 +54,3 @@ Content-Type: application/json
     "price": 100,
     "quantity": 10
 }
-

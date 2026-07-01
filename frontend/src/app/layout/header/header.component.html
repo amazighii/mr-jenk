@@ -1,0 +1,24 @@
+<header class="header">
+  <div class="container header__inner">
+    <a class="brand" routerLink="/products" aria-label="Buy01 home">
+      <span class="brand__mark"></span>
+      <span class="brand__name">Buy01</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary navigation">
+      <a routerLink="/products" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Products</a>
+
+      @if (session.isAuthed()) {
+        <a routerLink="/profile" routerLinkActive="is-active">Profile</a>
+        @if (showSeller()) {
+          <a routerLink="/seller" routerLinkActive="is-active">Seller</a>
+        }
+        <button class="linklike" type="button" (click)="logout()">Logout</button>
+      } @else {
+        <a routerLink="/login" routerLinkActive="is-active">Login</a>
+        <a class="cta" routerLink="/register" routerLinkActive="is-active">Register</a>
+      }
+    </nav>
+  </div>
+</header>
+
