@@ -43,12 +43,6 @@ pipeline {
         }
 
         stage('Deploy Stack') {
-            agent {
-                docker {
-                    reuseNode true
-                }
-
-            }
             steps {
                 echo "Deploying the Microservices Platform..."
                 // Execute a headless docker compose up command
