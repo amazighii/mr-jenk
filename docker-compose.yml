@@ -1,23 +1,5 @@
 services:
 
-  jenkins:
-    build: .
-    container_name: jenkins
-    restart: unless-stopped
-    user: root
-
-    networks:
-      - shared-net
-
-    ports:
-      - "${JENKINS_PORT:-8085}:8080"
-      - "${JENKINS_AGENT_PORT:-50000}:50000"
-
-    volumes:
-      - jenkins_home:/var/jenkins_home
-      # We only need the socket! The CLI tools are now built directly inside the container.
-      - /var/run/docker.sock:/var/run/docker.sock
-
   # MongoDB - Users
 
   mongodb_users:
