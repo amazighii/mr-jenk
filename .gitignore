@@ -25,3 +25,5 @@ logs/
 *.log
 
 docker-compose.override.yml
+
+local-traefik-config.yml
