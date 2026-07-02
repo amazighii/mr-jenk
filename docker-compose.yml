@@ -229,6 +229,7 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls={}"
     ports:
       - "8000:80"
       - "8443:443"
