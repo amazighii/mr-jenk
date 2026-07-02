@@ -18,11 +18,11 @@ pipeline {
                 // Compile and test your Spring Boot microservices
                 sh './mvnw clean test'
             }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
+            // post {
+            //     always {
+            //         junit '**/target/surefire-reports/*.xml'
+            //     }
+            // }
         }
 
         // stage('Frontend Unit Tests') {
