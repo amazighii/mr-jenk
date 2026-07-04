@@ -241,6 +241,9 @@ services:
     ports:
       - "8000:80"
       - "8443:443"
+    environment:
+      # 👇 FORCE Traefik to talk using your environment's API version
+      - DOCKER_API_VERSION=1.40
     volumes:
       - /run/user/1038/docker.sock:/var/run/docker.sock:ro
     networks:
