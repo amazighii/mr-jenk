@@ -229,7 +229,7 @@ services:
 
   # Traefik Edge Router
   traefik:
-    image: traefik:lts
+    image: traefik:v3.6
     container_name: traefik
     restart: unless-stopped
     command:
