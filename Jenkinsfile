@@ -20,15 +20,14 @@ pipeline {
             // }
         }
 
-        // stage('Frontend Unit Tests') {
-        //     steps {
-        //         // Headless Angular execution (e.g., Jasmine/Karma)
-        //         dir('frontend') {
-        //             sh 'npm install'
-        //             sh 'npm run test -- --watch=false --browsers=ChromeHeadless'
-        //         }
-        //     }
-        // }
+        stage('Frontend Unit Tests') {
+            steps {
+                dir('frontend') {
+                    sh 'npm install'
+                    sh 'npm run test -- --watch=false'
+                }
+            }
+        }
 
         stage('Build & Package') {
             steps {
