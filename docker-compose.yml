@@ -273,7 +273,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_DEFAULT_ZONE:-http://eureka-server:8761/eureka}
       JWT_SECRET: ${JWT_SECRET:-your-256-bit-secret-key-here-change-in-prod}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
-      CORS_ALLOWED_ORIGINS: "https://buy01.127.0.0.1.sslip.io:8443"
+      CORS_ALLOWED_ORIGINS: "https://localhost:8443"
     labels:
       - "traefik.enable=true"
       # 👇 Match by path prefix instead of host domain name
