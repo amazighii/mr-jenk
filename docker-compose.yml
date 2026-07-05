@@ -282,6 +282,7 @@ services:
       - "traefik.http.routers.gateway.tls=true"
       - "traefik.http.services.gateway.loadbalancer.server.port=8080"
       - "traefik.http.routers.gateway.priority=2" # Higher priority so it catches /api first
+      - "traefik.docker.network=shared-net"
 
   # Frontend
   frontend:
