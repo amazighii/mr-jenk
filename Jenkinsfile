@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        // Securely inject the keystore password from Jenkins Credentials Management
-        GATEWAY_SSL_KEY_STORE_PASSWORD = credentials('gateway-keystore-password')
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -47,6 +42,7 @@ pipeline {
                 echo "Deploying the Microservices Platform..."
                 // Execute a headless docker compose up command
                 // Note: We bypass certificate generation on the CI engine by supplying pre-existing configurations
+                sh 'docker network inspect shared-net >/dev/null 2>&1 || docker network create shared-net'
                 sh 'docker compose down'
                 sh 'docker compose up --build -d'
             }

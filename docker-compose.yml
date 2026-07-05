@@ -297,6 +297,8 @@ services:
     depends_on:
       gateway:
         condition: service_started
+    environment:
+      API_BASE_URL: ${FRONTEND_API_BASE_URL:-https://localhost:8443}
     networks:
       - shared-net
     labels:
@@ -310,14 +312,18 @@ services:
 # Networks
 networks:
   shared-net:
-    driver: bridge
+    name: shared-net
+    external: true
   users-net:
+    name: users-net
     driver: bridge
     internal: true
   products-net:
+    name: products-net
     driver: bridge
     internal: true
   media-net:
+    name: media-net
     driver: bridge
     internal: false
 

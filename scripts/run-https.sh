@@ -5,11 +5,11 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CERT_DIR="$ROOT_DIR/certs"
 ENV_FILE="$ROOT_DIR/.env"
 ENV_EXAMPLE_FILE="$ROOT_DIR/.env.example"
+TRAEFIK_CONFIG_FILE="$ROOT_DIR/local-traefik-config.yml"
+COMPOSE_OVERRIDE_FILE="$ROOT_DIR/docker-compose.override.yml"
 
 CERT_FILE="$CERT_DIR/localhost.pem"
 KEY_FILE="$CERT_DIR/localhost-key.pem"
-KEYSTORE_FILE="$CERT_DIR/localhost.p12"
-KEYSTORE_PASSWORD="${GATEWAY_SSL_KEY_STORE_PASSWORD:-changeit}"
 
 DETACHED=false
 FORCE_CERTS=false
@@ -70,7 +70,7 @@ upsert_env() {
 generate_certs() {
   mkdir -p "$CERT_DIR"
 
-  if [[ "$FORCE_CERTS" == false && -f "$CERT_FILE" && -f "$KEY_FILE" && -f "$KEYSTORE_FILE" ]]; then
+  if [[ "$FORCE_CERTS" == false && -f "$CERT_FILE" && -f "$KEY_FILE" ]]; then
     echo "Using existing certificates in $CERT_DIR"
     return
   fi
@@ -97,13 +97,6 @@ generate_certs() {
       -subj "/CN=localhost" \
       -addext "subjectAltName=DNS:localhost,IP:127.0.0.1,IP:::1"
   fi
-
-  openssl pkcs12 -export \
-    -in "$CERT_FILE" \
-    -inkey "$KEY_FILE" \
-    -out "$KEYSTORE_FILE" \
-    -name localhost \
-    -passout "pass:$KEYSTORE_PASSWORD"
 }
 
 prepare_env() {
@@ -117,20 +110,36 @@ prepare_env() {
     echo "Created .env from .env.example"
   fi
 
-  upsert_env "GATEWAY_SSL_ENABLED" "true"
-  upsert_env "GATEWAY_SSL_KEY_STORE_HOST_PATH" "./certs/localhost.p12"
-  upsert_env "GATEWAY_SSL_KEY_STORE" "/certs/localhost.p12"
-  upsert_env "GATEWAY_SSL_KEY_STORE_PASSWORD" "$KEYSTORE_PASSWORD"
-  upsert_env "GATEWAY_SSL_KEY_STORE_TYPE" "PKCS12"
-  upsert_env "GATEWAY_SSL_KEY_ALIAS" "localhost"
+  upsert_env "CORS_ALLOWED_ORIGINS" "https://localhost:8443"
+  upsert_env "FRONTEND_API_BASE_URL" "https://localhost:8443"
+}
 
-  upsert_env "FRONTEND_SSL_CERTIFICATE_HOST_PATH" "./certs/localhost.pem"
-  upsert_env "FRONTEND_SSL_CERTIFICATE" "/certs/localhost.pem"
-  upsert_env "FRONTEND_SSL_CERTIFICATE_KEY_HOST_PATH" "./certs/localhost-key.pem"
-  upsert_env "FRONTEND_SSL_CERTIFICATE_KEY" "/certs/localhost-key.pem"
+prepare_traefik_override() {
+  cat > "$TRAEFIK_CONFIG_FILE" <<'EOF'
+tls:
+  certificates:
+    - certFile: /etc/traefik/certs/localhost.pem
+      keyFile: /etc/traefik/certs/localhost-key.pem
+EOF
 
-  upsert_env "CORS_ALLOWED_ORIGINS" "https://localhost:4200"
-  upsert_env "FRONTEND_API_BASE_URL" "https://localhost:8080"
+  cat > "$COMPOSE_OVERRIDE_FILE" <<'EOF'
+services:
+  traefik:
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.file.filename=/etc/traefik/dynamic/local.yml"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls={}"
+    volumes:
+      - ./certs:/etc/traefik/certs:ro
+      - ./local-traefik-config.yml:/etc/traefik/dynamic/local.yml:ro
+EOF
+}
+
+ensure_shared_network() {
+  docker network inspect shared-net >/dev/null 2>&1 || docker network create shared-net >/dev/null
 }
 
 run_compose() {
@@ -141,8 +150,8 @@ run_compose() {
   fi
 
   echo "Starting HTTPS stack..."
-  echo "Frontend: https://localhost:4200"
-  echo "Gateway:  https://localhost:8080"
+  echo "App:     https://localhost:8443"
+  echo "Gateway: https://localhost:8443/api"
 
   cd "$ROOT_DIR"
   docker "${compose_args[@]}"
@@ -153,4 +162,6 @@ require_command docker
 
 generate_certs
 prepare_env
+prepare_traefik_override
+ensure_shared_network
 run_compose

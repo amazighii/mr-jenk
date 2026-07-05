@@ -96,7 +96,6 @@ This script:
 
 - creates `certs/localhost.pem`
 - creates `certs/localhost-key.pem`
-- creates `certs/localhost.p12`
 - uses `mkcert` when available, otherwise falls back to self-signed OpenSSL certs
 - prepares `.env`
 - runs `docker compose up --build`
@@ -111,8 +110,8 @@ Useful options:
 
 After startup:
 
-- Frontend: `https://localhost:4200`
-- Gateway: `https://localhost:8080`
+- App: `https://localhost:8443`
+- Gateway API: `https://localhost:8443/api`
 - Eureka: `http://localhost:8761`
 - MinIO API: `http://localhost:9000`
 - MinIO Console: `http://localhost:9001`
@@ -129,10 +128,10 @@ docker compose up --build
 
 For HTTPS to work in that mode, make sure:
 
-- `.env` contains the HTTPS values from `.env.example`
+- `.env` contains `CORS_ALLOWED_ORIGINS=https://localhost:8443`
+- `.env` contains `FRONTEND_API_BASE_URL=https://localhost:8443`
 - `certs/localhost.pem` exists
 - `certs/localhost-key.pem` exists
-- `certs/localhost.p12` exists
 
 The helper script is still the recommended path because it generates those files for you.
 
@@ -164,13 +163,15 @@ npm start
 The frontend is configured to talk to the gateway. If you are using the current HTTPS setup, the expected API base is:
 
 ```text
-https://localhost:8080
+https://localhost:8443
 ```
 
 ## Common Ports
 
-- `4200` frontend
-- `8080` gateway
+- `8443` Traefik HTTPS entrypoint
+- `8000` Traefik HTTP entrypoint
+- `4200` frontend direct container port
+- `8080` gateway internal/direct port
 - `8081` user-service
 - `8082` product-service
 - `8083` media-service
@@ -188,7 +189,7 @@ https://localhost:8080
 
 ## Troubleshooting
 
-- If the frontend cannot reach the backend, check that the gateway is up on `https://localhost:8080`.
+- If the frontend cannot reach the backend, check that the gateway API is up on `https://localhost:8443/api`.
 - If Docker HTTPS startup fails, run `./scripts/run-https.sh --force-certs`.
 - If the browser warns about certificates, either trust the local cert or install `mkcert` and rerun the HTTPS script.
 - If uploads fail, check MinIO credentials in `.env`.
