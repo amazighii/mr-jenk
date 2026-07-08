@@ -65,6 +65,7 @@ pipeline {
 
             sh 'docker compose down'
             sh 'git revert HEAD --no-edit'
+            sh 'git push origin HEAD:${env.BRANCH_NAME}'
         // Option: sh 'docker compose -f docker-compose.rollback.yml up -d'
         }
     }
