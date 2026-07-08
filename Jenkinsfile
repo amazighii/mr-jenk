@@ -10,11 +10,6 @@ pipeline {
             steps {
                 sh './mvnw clean test'
             }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
         }
 
         stage('Frontend Unit Tests') {
@@ -49,6 +44,14 @@ pipeline {
     }
 
     post {
+        always {
+            echo 'Processing and archiving all test results...'
+
+            // This reads BOTH reports simultaneously
+            junit testResults: '**/target/surefire-reports/*.xml, **/frontend/junit-frontend.xml',
+                  allowEmptyResults: true
+        }
+
         success {
             echo 'Deployment successful!'
 
