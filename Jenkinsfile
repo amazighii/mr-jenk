@@ -58,10 +58,19 @@ pipeline {
     post {
         success {
             echo 'Deployment successful!'
+
+            mail to: 'abdessamadmazighi123@gmail.com',
+                 subject: "Pipeline Success: Job '${env.JOB_NAME}' [Build #${env.BUILD_NUMBER}]",
+                 body: "Great news! The pipeline completed successfully.\n\nView the execution details here: ${env.BUILD_URL}"
+        }
         // Send your Slack/Email notification here (Lecture 18/21)
         }
         failure {
             echo 'Build failed! Executing authenticated automated rollback...'
+
+            mail to: 'your-personal-email@example.com',
+                 subject: "🛑 PIPELINE CRASHED: Job '${env.JOB_NAME}' [Build #${env.BUILD_NUMBER}]",
+                 body: "Attention! The pipeline has failed during execution.\n\nReview the console logs to debug the failure here: ${env.BUILD_URL}console"
 
             // 1. Revert locally
             sh 'git revert HEAD --no-edit'
