@@ -59,10 +59,10 @@ pipeline {
         success {
             echo 'Deployment successful!'
 
-            mail to: 'abdessamadmazighi123@gmail.com',
+            mail to: 'your-personal-email@example.com',
                  subject: "Pipeline Success: Job '${env.JOB_NAME}' [Build #${env.BUILD_NUMBER}]",
                  body: "Great news! The pipeline completed successfully.\n\nView the execution details here: ${env.BUILD_URL}"
-        }
+
         // Send your Slack/Email notification here (Lecture 18/21)
         }
         failure {
