@@ -1,3 +1,5 @@
+import '@angular/compiler';
+
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { extractApiErrorMessage } from './http-error';
