@@ -59,7 +59,7 @@ pipeline {
         success {
             echo 'Deployment successful!'
 
-            mail to: 'justyoupika@example.com',
+            mail to: 'justyoupika@gmail.com',
                  subject: "Pipeline Success: Job '${env.JOB_NAME}' [Build #${env.BUILD_NUMBER}]",
                  body: "Great news! The pipeline completed successfully.\n\nView the execution details here: ${env.BUILD_URL}"
 
@@ -68,7 +68,7 @@ pipeline {
         failure {
             echo 'Build failed! Executing authenticated automated rollback...'
 
-            mail to: 'justyoupika@example.com',
+            mail to: 'justyoupika@gmail.com',
                  subject: "🛑 PIPELINE CRASHED: Job '${env.JOB_NAME}' [Build #${env.BUILD_NUMBER}]",
                  body: "Attention! The pipeline has failed during execution.\n\nReview the console logs to debug the failure here: ${env.BUILD_URL}console"
 
