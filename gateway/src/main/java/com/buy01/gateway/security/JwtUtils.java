@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 
 @Component
-public cl JwtUtils {
+public class JwtUtils {
 
     @Value("${jwt.secret}")
     private String secret;
