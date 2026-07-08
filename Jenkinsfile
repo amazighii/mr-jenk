@@ -67,7 +67,7 @@ pipeline {
             sh 'git revert HEAD --no-edit'
 
             // 2. Use Jenkins Credentials helper to safely authenticate the push
-            withCredentials([usernamePassword(credentialsId: 'github-token-id',
+            withCredentials([usernamePassword(credentialsId: 'pushing token',
                                           usernameVariable: 'GIT_USER',
                                           passwordVariable: 'GIT_TOKEN')]) {
                 // Extract the real branch name locally if env.BRANCH_NAME is null
