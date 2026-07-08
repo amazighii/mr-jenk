@@ -72,11 +72,13 @@ pipeline {
                                           passwordVariable: 'GIT_TOKEN')]) {
                 // Extract the real branch name locally if env.BRANCH_NAME is null
                 sh '''
+                CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
                 # Configure temporary credentials for this specific push command
                 git remote set-url origin "https://${GIT_USER}:${GIT_TOKEN}@github.com/amazighii/mr-jenk.git"
 
                 # Push the revert cleanly back up
-                git push origin HEAD:main
+                git push origin HEAD:${CURRENT_BRANCH}
             '''
                                           }
         }
