@@ -61,12 +61,26 @@ pipeline {
         // Send your Slack/Email notification here (Lecture 18/21)
         }
         failure {
-            echo 'Pipeline failed. Initiating Rollback...'
+            echo 'Build failed! Executing authenticated automated rollback...'
 
-            sh 'docker compose down'
+            // 1. Revert locally
             sh 'git revert HEAD --no-edit'
-            sh "git push origin HEAD:${env.BRANCH_NAME}"
-        // Option: sh 'docker compose -f docker-compose.rollback.yml up -d'
+
+            // 2. Use Jenkins Credentials helper to safely authenticate the push
+            withCredentials([usernamePassword(credentialsId: 'github-token-id',
+                                          usernameVariable: 'GIT_USER',
+                                          passwordVariable: 'GIT_TOKEN')]) {
+                // Extract the real branch name locally if env.BRANCH_NAME is null
+                sh '''
+                CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+                # Configure temporary credentials for this specific push command
+                git remote set-url origin "https://${GIT_USER}:${GIT_TOKEN}@github.com/amazighii/mr-jenk.git"
+
+                # Push the revert cleanly back up
+                git push origin HEAD:${CURRENT_BRANCH}
+            '''
+                                          }
         }
     }
 }
