@@ -14,7 +14,7 @@ pipeline {
 
         stage('Backend Unit Tests') {
             steps {
-                sh './mvnw clean test'
+                sh './mvnw clean tes'
             }
         // post {
         //     always {
